@@ -1,0 +1,34 @@
+
+/*# sourceMappingURL=custom.min.css.map */
+.dx-datagrid .dx-header-filter{
+    color: #636363 !important;
+}
+.dx-header-row{
+    font-weight: 500;
+    padding: 0.75rem 0.6rem;
+    background-color: #f3f6f9;
+    color: #878a99;
+    text-transform:uppercase
+}
+.dx-datagrid .dx-row > td{
+    padding: 0.75rem 0.6rem;
+}
+.dx-datagrid .dx-header-filter-empty{
+    color: rgba(149,149,149,.5) !important;
+}
+.dx-widget{
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+}
+.dx-datagrid .dx-column-indicators{
+    float: right;
+}
+.dx-header-row > td{
+    text-align: left !important;
+}
+.report_btn_search{
+    position: absolute;
+    z-index: 1;
+    right: calc(0% + 11.5rem);
+}
