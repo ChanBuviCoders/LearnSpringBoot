@@ -1,7 +1,6 @@
 package config.serviceI;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,13 +31,10 @@ public class customerServiceI implements customerService {
 	@Autowired
 	customerListR customerListR;
 
-	@Autowired
-	response response;
-
 	/* **************************************************************************************************************************/
 	@RequestMapping(value = "/addCustomer", method = RequestMethod.POST, produces = "application/Json")
 	public response addCustomer(@RequestBody customerList customerList) {
-
+		response response = new response();
 		try {
 			customerList.getLoanAmount();
 			customerListR.save(customerList);
@@ -66,6 +62,7 @@ public class customerServiceI implements customerService {
 //	---------------------------------------------update customer------------------------------------->
 	@Override
 	public response updateCustomer(customerList customerList) {
+		response response = new response();
 		try {
 
 			if (customerList != null) {
@@ -97,6 +94,7 @@ public class customerServiceI implements customerService {
 
 	@Override
 	public response deleteCustomerByCustomerId(long customerId) {
+		response response = new response();
 		try {
 			customerListR.deleteById(customerId);
 			response.setMessage("Deleted Successfully");
@@ -112,6 +110,7 @@ public class customerServiceI implements customerService {
 	@Override
 	public response getAllCustomerListByUserAccountId(long userAccountId) {
 		List<customerList> acList = null;
+		response response = new response();
 		try {
 			acList = (List<customerList>) customerListR.findAllByUserAccountId(userAccountId);
 			response.setData(acList);
@@ -142,6 +141,7 @@ public class customerServiceI implements customerService {
 	public static final String ACCOUNT_SID = "AC085b4974038b667a53ff0fcaaf20e9c3";
 	public static final String AUTH_TOKEN = "35e396c4ec0e5a17a2684970bbf3dbc6";
 
+	@SuppressWarnings("unused")
 	@Override
 	public ResponseEntity<String> sendSmsToMobileNumber() throws ParseException {
 		Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
@@ -155,6 +155,7 @@ public class customerServiceI implements customerService {
 	@SuppressWarnings("unchecked")
 	@Override
 	public response getchartDetails(Long userAccountId, Byte type) {
+		response response = new response();
 		try {
 
 			JSONObject json = new JSONObject();
@@ -162,9 +163,9 @@ public class customerServiceI implements customerService {
 			json.put("chartData", getchartData(userAccountId, type));
 
 			String monthLists[] = customerListR.getMonthLists(userAccountId);
-			
+
 			json.put("chartLabels", monthLists);
-			
+
 			response.setStatus(true);
 			response.setData(json);
 			return response;
@@ -180,7 +181,7 @@ public class customerServiceI implements customerService {
 		JSONArray json = new JSONArray();
 
 		try {
-			
+
 			List<String> loanTypes = customerListR.findDistinctLoanTypeByUserAccountId(userAccountId);
 
 			for (String loanType : loanTypes) {
@@ -188,12 +189,14 @@ public class customerServiceI implements customerService {
 				JSONArray jsonArray = new JSONArray();
 
 				String monthLists[] = customerListR.getMonthLists(userAccountId);
-				
+
 				for (String month : monthLists) {
 					if (type == 1)
 						jsonArray.add(customerListR.getCustomerCountByMonth(month, loanType, userAccountId));
 					else
-						jsonArray.add(customerListR.getSumOfLoanAmountByLoanType(month, loanType, userAccountId)!=null ? customerListR.getSumOfLoanAmountByLoanType(month, loanType, userAccountId):0);
+						jsonArray.add(customerListR.getSumOfLoanAmountByLoanType(month, loanType, userAccountId) != null
+								? customerListR.getSumOfLoanAmountByLoanType(month, loanType, userAccountId)
+								: 0);
 				}
 
 				JSONObject jinner = new JSONObject();
@@ -206,7 +209,7 @@ public class customerServiceI implements customerService {
 
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("exception------>"+e);
+			System.out.println("exception------>" + e);
 		}
 		return json;
 	}

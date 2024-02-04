@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionConfig {
 
 	@ExceptionHandler // for handle exception globally (method annotation)
-	private ResponseEntity arithmeticException(ArithmeticException AE) {
+	private ResponseEntity<?> arithmeticException(ArithmeticException AE) {
 		System.out.println(AE);
 		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 	}
-
-	private ResponseEntity accessDeniedException(AccessDeniedException ADE) {
+    
+	@ExceptionHandler
+	private ResponseEntity<String> accessDeniedException(AccessDeniedException ADE) {
 
 		System.out.println(ADE);
-		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body("Full Authentication Error");
+		return ResponseEntity.status(HttpStatus.SC_GATEWAY_TIMEOUT).body("Full Authentication Error");
 	}
 }

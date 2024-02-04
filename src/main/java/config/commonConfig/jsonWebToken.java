@@ -18,7 +18,7 @@ public class jsonWebToken {
 
 		Claims claims = Jwts.claims().setIssuer(String.valueOf(userAccount.getUserName()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))
-				.setExpiration(new Date(System.currentTimeMillis() + (1 * 60 * 1000)));
+				.setExpiration(new Date(System.currentTimeMillis() + (120 * 60 * 1000)));
 		claims.put("userAccountId", userAccount.getUserAccountId());
 
 		return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.HS512, secretKey).compact();

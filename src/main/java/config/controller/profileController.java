@@ -17,9 +17,6 @@ import config.Service.profileService;
 public class profileController {
 
 	@Autowired
-	response response;
-
-	@Autowired
 	profileService profileS;
 
 	@RequestMapping(value = "/getUserProfile", method = RequestMethod.POST, produces = "application/json")
@@ -34,6 +31,7 @@ public class profileController {
 
 	@RequestMapping(value = "/checkCurrentPassword", method = RequestMethod.POST, produces = "application/Json")
 	public response checkCurrentPassword(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 			return profileS.checkCurrentPassword(userAccount);
 		} catch (Exception e) {
@@ -45,6 +43,7 @@ public class profileController {
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = "application/Json")
 	public response changePassword(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 			return profileS.changePassword(userAccount);
 		} catch (Exception e) {
@@ -56,6 +55,7 @@ public class profileController {
 
 	@RequestMapping(value = "/updateUserProfile", method = RequestMethod.POST, produces = "application/Json")
 	public response updateUserProfile(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 			return profileS.updateUserProfile(userAccount);
 		} catch (Exception e) {

@@ -25,9 +25,6 @@ import config.commonConfig.jsonWebToken;
 public class authServiceI implements authService {
 
 	@Autowired
-	response response;
-
-	@Autowired
 	userAccountR userAccountR;
 
 	@Autowired
@@ -35,12 +32,11 @@ public class authServiceI implements authService {
 
 	@Override
 	public response authSession(userAccount userAccount) {
+		response response = new response();
 		try {
 			userAccount ua = userAccountR.findByUserNameAndPassword(userAccount.getUserName(),
 					userAccount.getPassword());
 			if (ua != null) {
-
-//				updateLastLoginDate(ua.getUserAccountId());
 				ua.setActive(true);
 				userAccountR.save(ua);
 				response.setToken(jwtService.generateToken(ua));
@@ -81,23 +77,13 @@ public class authServiceI implements authService {
 
 	@Override
 	public response getSession(String jwtToken) {
+		response response = new response();
 		try {
-
 			String[] parts = jwtToken.split("\\.");
-
 			Base64.Decoder decoder = Base64.getUrlDecoder();
-
-//			   String header = new String(decoder.decode(parts[0]));
 			String payload = new String(decoder.decode(parts[1]));
-//			   String part3 = new String(decoder.decode(parts[2]));
-
 			JSONParser parser = new JSONParser();
 			JSONObject json = (JSONObject) parser.parse(payload.toString());
-//
-//			userAccount userAccount = new userAccount();
-//			userAccount.setUserName(json.get("iss").toString());
-//			userAccount.setUserAccountId();
-
 			return getTokenUser((Long) json.get("userAccountId"), jwtToken);
 
 		} catch (Exception e) {
@@ -109,51 +95,17 @@ public class authServiceI implements authService {
 	}
 
 	public response getTokenUser(Long userAccountId, String jwtToken) {
+		response response = new response();
 
 		try {
 			if (userAccountId != null) {
 				userAccount cudb = userAccountR.findByUserAccountId(userAccountId);
 				cudb.setPanImagePath(fileToBase64(cudb.getPanImagePath()));
 				cudb.setAdharImagePath(fileToBase64(cudb.getAdharImagePath()));
-//				JsonObject jinner = new JsonObject();
-//				jinner.addProperty("firstName", cudb.getFirstName());
-//				jinner.addProperty("lastName", cudb.getLastName());
-//				jinner.addProperty("dob", cudb.getDob());
-//				jinner.addProperty("gender", cudb.getGender());
-//				jinner.addProperty("fatherName", cudb.getFatherName());
-//				jinner.addProperty("marriedStatus", cudb.getMarriedStatus());
-//				jinner.addProperty("qualification", cudb.getQualification());
-//				jinner.addProperty("occupation", cudb.getOccupation());
-//				jinner.addProperty("email", cudb.getEmail());
-//				jinner.addProperty("state", cudb.getState());
-//				jinner.addProperty("city", cudb.getCity());
-//				jinner.addProperty("address", cudb.getAddress());
-//				jinner.addProperty("zipcode", cudb.getZipcode());
-//				jinner.addProperty("annualIncome", cudb.getAnnualIncome());
-//				jinner.addProperty("altMobileNumber", cudb.getAltMobileNumber());
-//				jinner.addProperty("mobileNumber", cudb.getMobileNumber());
-//				jinner.addProperty("clientInfoId", cudb.getClientInfoId());
-////				jinner.addProperty("lastLoginDate", cudb.getLastLoginDate().toString());
-//				jinner.addProperty("clientId", clientId);
-//				jinner.addProperty("token", token);
-//				
-//				JsonObject adharInfo = new JsonObject();
-//				adharInfo.addProperty("id", cudb.getAdharDetails().getId());
-//				adharInfo.addProperty("adharNumber", cudb.getAdharDetails().getAdharNumber());
-//				adharInfo.addProperty("imagePath", fileToBase64(cudb.getAdharDetails().getImagePath()));
-// 				
-//				JsonObject panInfo = new JsonObject();
-//				panInfo.addProperty("id", cudb.getPanDetails().getId());
-//				panInfo.addProperty("panNumber", cudb.getPanDetails().getPanNumber());
-//				panInfo.addProperty("imagePath", fileToBase64(cudb.getPanDetails().getImagePath()));
-//				
-//				
 				response.setStatus(true);
 				response.setMessage("success");
 				response.setData(cudb);
 				response.setToken(jwtToken);
-
-				// response.add("data",jinner);
 				return response;
 			} else {
 				response.setStatus(false);
@@ -176,6 +128,7 @@ public class authServiceI implements authService {
 
 	@Override
 	public response logout(userAccount userAccount) {
+		response response = new response();
 
 		try {
 			userAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
@@ -189,9 +142,9 @@ public class authServiceI implements authService {
 			response.setStatus(true);
 		} catch (Exception e) {
 			// TODO: handle exception
-			response.setStatus(false);	
+			response.setStatus(false);
 		}
-       
+
 		return response;
 	}
 

@@ -29,14 +29,12 @@ public class clientDocumentsController {
 	userAccountR userAccountR;
 
 	@Autowired
-	response response;
-
-	@Autowired
 	clientDocumentS clientDocumentS;
 
 	@RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = "application/Json")
 	public response uploadImage(@RequestParam("file") List<MultipartFile> multipartFiles,
 			@RequestParam("uploadedBy") String uploadedBy, @RequestParam("userAccountId") long userAccountId) {
+		response response = new response();
 		try {
 			return clientDocumentS.uploadImage(multipartFiles, uploadedBy, userAccountId);
 		} catch (Exception e) {
@@ -50,6 +48,7 @@ public class clientDocumentsController {
 //	----------------------------------------get uploaded file details-------------------------------
 	@RequestMapping(value = "/getUploadedFileDetails", method = RequestMethod.POST, produces = "application/Json")
 	public response getUploadedFileDetails(@RequestBody long userAccountId) {
+		response response = new response();
 		try {
 			return clientDocumentS.getUploadedFileDetails(userAccountId);
 		} catch (Exception e) {
@@ -63,6 +62,7 @@ public class clientDocumentsController {
 //	----------------------------------------get uploaded file details-------------------------------
 	@RequestMapping(value = "/deleteFileDetails", method = RequestMethod.POST, produces = "application/Json")
 	public response deleteFileDetails(@RequestBody clientDocuments clientDocuments) {
+		response response = new response();
 		try {
 			return clientDocumentS.deleteFileDetails(clientDocuments);
 		} catch (Exception e) {

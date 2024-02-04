@@ -26,13 +26,11 @@ public class authController {
 	jsonWebToken jwtService;
 
 	@Autowired
-	response response;
-
-	@Autowired
 	authService authService;
 
 	@RequestMapping(value = "/authSession", method = RequestMethod.POST, produces = "application/json")
 	public response authSession(@RequestBody userAccount userAccount) {
+		response response = new response();
 
 		try {
 			if (userAccount.getUserName() != null && userAccount.getPassword() != null) {
@@ -51,10 +49,9 @@ public class authController {
 		}
 	}
 
-	// @RequestHeader (name="Authorization") String jwttoken
-//	 @SuppressWarnings("null")
 	@RequestMapping(value = "/getSession", method = RequestMethod.POST, produces = "application/Json")
 	public response getSession(@RequestBody String jwttoken) {
+		response response = new response();
 		try {
 			if (!jwttoken.isEmpty()) {
 
@@ -94,6 +91,7 @@ public class authController {
 
 	@RequestMapping(value = "/logout", method = RequestMethod.POST, produces = "application/Json")
 	public response logout(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 			return authService.logout(userAccount);
 		} catch (Exception e) {

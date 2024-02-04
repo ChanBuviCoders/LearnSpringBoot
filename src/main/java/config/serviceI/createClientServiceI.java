@@ -18,14 +18,12 @@ import config.Service.createClientService;
 public class createClientServiceI implements createClientService {
 
 	@Autowired
-	response response;
-
-	@Autowired
 	userAccountR userAccountR;
 
 	@SuppressWarnings("unused")
 	@Override
 	public response createClient(userAccount userAccount) {
+		response response = new response();
 		try {
 			
 			userAccount uA = userAccountR.getUserAccountByUserName(userAccount.getUserName());

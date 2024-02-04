@@ -15,9 +15,6 @@ import config.Service.profileService;
 public class profileServiceI implements profileService {
 
 	@Autowired
-	response response;
-
-	@Autowired
 	userAccountR userAccountR;
 
 	@Override
@@ -36,6 +33,7 @@ public class profileServiceI implements profileService {
 
 	@Override
 	public response checkCurrentPassword(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 			userAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
 			if (userAccountFr.getPassword().equals(userAccount.getPassword())) {
@@ -56,6 +54,7 @@ public class profileServiceI implements profileService {
 
 	@Override
 	public response changePassword(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 
 			if (userAccount.getUserAccountId() != null && !userAccount.getPassword().isEmpty()) {
@@ -79,6 +78,7 @@ public class profileServiceI implements profileService {
 
 	@Override
 	public response updateUserProfile(@RequestBody userAccount userAccount) {
+		response response = new response();
 		try {
 			if (userAccount.getUserAccountId() != null) {
 				/************** Fr -->from repository ******************/

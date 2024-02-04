@@ -2,19 +2,20 @@ package config.DTO;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import lombok.Data;
-import lombok.NonNull;
 
 @Data
 @Component
+@JsonInclude(Include.NON_NULL)
 public class response {
 
 	private boolean Status;
 	private String Message;
-	private Object data = null;
-	@NonNull
+	private Object data;
 	private Object error;
-	@NonNull
 	private String token;
 
 	public String getToken() {

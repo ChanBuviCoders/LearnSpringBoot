@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.nio.file.Paths;
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,16 +29,12 @@ public class clientDocumentI implements clientDocumentS {
 	@Autowired
 	clientDocumentsR clientDocumentsR;
 
-	@Autowired
-	response response;
-
 	String apiFilePath = "G:\\chandran\\java\\springCrud\\documents\\apiDocuments";
 
 	@Override
 	public response uploadImage(List<MultipartFile> multipartFiles, String uploadedBy, long userAccountId) {
+		response response = new response();
 		try {
-//			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//			java.util.Date date = new java.util.Date();
 
 			String dPath = apiFilePath.concat("\\" + uploadedBy);// dPath--->Directory path
 			File f = new File(dPath);
@@ -61,7 +58,7 @@ public class clientDocumentI implements clientDocumentS {
 					fub.setUploadedBy(uploadedBy);
 					fub.setFilePath(dPath);
 					fub.setUserAccountId(userAccountId);
-
+					fub.setUploadedDate(new Date(System.currentTimeMillis()));;
 					clientDocumentsR.save(fub);
 					file.transferTo(Paths.get(filePath));
 				} else {
@@ -93,6 +90,7 @@ public class clientDocumentI implements clientDocumentS {
 	/*-------------------------get uploaded file details-------------------------------*/
 	@Override
 	public response getUploadedFileDetails(@RequestBody long userAccountId) {
+		response response = new response();
 		List<clientDocuments> fub = null;
 		try {
 			fub = clientDocumentsR.findAllByUserAccountId(userAccountId);
@@ -110,6 +108,7 @@ public class clientDocumentI implements clientDocumentS {
 	/*---------------------------get uploaded file details-------------------------------*/
 	@Override
 	public response deleteFileDetails(clientDocuments clientDocuments) {
+		response response = new response();
 		try {
 			clientDocumentsR.deleteById(clientDocuments.getFileId());
 			File file = new File(clientDocuments.getFilePath() + "\\" + clientDocuments.getFileName());

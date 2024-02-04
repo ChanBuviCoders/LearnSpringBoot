@@ -31,15 +31,12 @@ public class customerController {
 	customerService customerS;
 
 	@Autowired
-	response response;
-
-	@Autowired
 	testPageable pagingDao;
 
 	/* ****************************************************************************************/
 	@RequestMapping(value = "/addCustomer", method = RequestMethod.POST, produces = "application/Json")
 	public response addCustomer(@RequestBody customerList customerList) {
-
+		response response = new response();
 		try {
 			return customerS.addCustomer(customerList);
 		} catch (Exception e) {
@@ -62,6 +59,7 @@ public class customerController {
 	/*--------------------------------------update customer-------------------------------------*/
 	@RequestMapping(value = "/updateCustomer", method = RequestMethod.POST, produces = "application/Json")
 	public response updateCustomer(@RequestBody customerList customerList) {
+		response response = new response();
 		try {
 			return customerS.updateCustomer(customerList);
 		} catch (Exception e) {
@@ -75,6 +73,7 @@ public class customerController {
 	/*-------------------------------------------delete customer----------------------------------------*/
 	@RequestMapping(value = "/deleteCustomer", method = RequestMethod.POST, produces = "application/Json")
 	public response deleteCustomer(@RequestBody customerList customerList) {
+		response response = new response();
 		try {
 			return customerS.deleteCustomerByCustomerId(customerList.getCustomerId());
 		} catch (Exception e) {
@@ -86,6 +85,7 @@ public class customerController {
 
 	@RequestMapping(value = "/getAllCustomerList", method = RequestMethod.POST, produces = "application/Json")
 	public response getAllCustomerList(@RequestBody userAccount userAccount) {
+		response response = new response();
 
 		try {
 			return customerS.getAllCustomerListByUserAccountId(userAccount.getUserAccountId());
@@ -116,6 +116,7 @@ public class customerController {
 	@RequestMapping(value = "/getChartDetails/{userAccountId}/{type}", method = RequestMethod.POST, produces = "application/Json")
 	public response getChartDetails(@PathVariable("userAccountId") long userAccountId,
 			@PathVariable("type") Byte type) {
+		response response = new response();
 
 		try {
 			return customerS.getchartDetails(userAccountId, type);
