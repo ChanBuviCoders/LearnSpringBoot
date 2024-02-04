@@ -33,4 +33,4 @@ build/
 .vscode/
 
 #*********** webapps ********
-!**/src/main/webapp/
+**/src/main/webapp/
