@@ -15,25 +15,20 @@ public interface customerListR extends JpaRepository<customerList, Long> {
 
 	List<customerList> findAllByUserAccountId(long userAccountId);
 
-	@Query(value = "select distinct (loan_type) from customer_list where user_account_id=:userAccountId  ",nativeQuery = true)
+	@Query(value = "select distinct (loanType) from customerList where userAccount_id=:userAccountId  ", nativeQuery = true)
 	public List<String> findDistinctLoanTypeByUserAccountId(@Param("userAccountId") Long UserAccountId);
 
-//	Long countByStartDateMonthAndLoanTypeAndUserAccountId(String month,String loanType,Long userAccountId);
-//	
-//	Long sumLoanAmountByMonthAndLoanTypeAndUserAccountId(String month,String loanType,Long userAccountId);
-//	
-
-	@Query(value = "SELECT distinct loan_type  FROM CUSTOMER_LIST where user_Account_Id=:userAccountId;", nativeQuery = true)
+	@Query(value = "SELECT distinct loanType  FROM customerList where userAccountId=:userAccountId;", nativeQuery = true)
 	public String[] getLoanTypes(@Param("userAccountId") long userAccountId);
 
-	@Query(value = "SELECT distinct datename(month,start_date) FROM customer_List where user_Account_Id=:userAccountId  order by  datename(month,start_date) desc ;", nativeQuery = true)
+	@Query(value = "SELECT distinct datename(month,startDate) FROM customerList where userAccountId=:userAccountId  order by  datename(month,startDate) desc ;", nativeQuery = true)
 	public String[] getMonthLists(@Param("userAccountId") long userAccountId);
 
-	@Query(value = "SELECT count (start_date) FROM customer_List  where  datename(month,start_date)=:month and  loan_Type=:loanType  and user_Account_Id=:userAccountId ;", nativeQuery = true)
+	@Query(value = "SELECT count (startDate) FROM customerList  where  datename(month,startDate)=:month and  loanType=:loanType  and userAccountId=:userAccountId ;", nativeQuery = true)
 	public int getCustomerCountByMonth(@Param("month") String month, @Param("loanType") String loanType,
 			@Param("userAccountId") long userAccountId);
 
-	@Query(value = "select  sum(loan_amount) as sum_value from customer_List  where user_Account_Id=:userAccountId and datename(month,start_date)=:month and loan_Type=:loanType ;", nativeQuery = true)
+	@Query(value = "select  sum(loanAmount) as sum_value from customerList  where userAccountId=:userAccountId and datename(month,startdate)=:month and loanType=:loanType ;", nativeQuery = true)
 	public Long getSumOfLoanAmountByLoanType(@Param("month") String month, @Param("loanType") String loanType,
 			@Param("userAccountId") long userAccountId);
 

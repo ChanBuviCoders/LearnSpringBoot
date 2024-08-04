@@ -14,7 +14,7 @@ public class GlobalExceptionConfig {
 		System.out.println(AE);
 		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 	}
-    
+
 	@ExceptionHandler
 	private ResponseEntity<String> accessDeniedException(AccessDeniedException ADE) {
 

@@ -9,4 +9,8 @@ import config.Entity.userAccount;
 public interface createClientService {
 
 	public response createClient(userAccount userAccount);
+
+	public response getUserGroupList();
+
+	public response getNavigationList(Long userGroupId);
 }

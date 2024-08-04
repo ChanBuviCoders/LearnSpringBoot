@@ -18,44 +18,4 @@ public class response {
 	private Object error;
 	private String token;
 
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public boolean isStatus() {
-		return Status;
-	}
-
-	public void setStatus(boolean status) {
-		Status = status;
-	}
-
-	public String getMessage() {
-		return Message;
-	}
-
-	public void setMessage(String message) {
-		Message = message;
-	}
-
-	public Object getData() {
-		return data;
-	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
-
-	public Object getError() {
-		return error;
-	}
-
-	public void setError(Object error) {
-		this.error = error;
-	}
-
 }

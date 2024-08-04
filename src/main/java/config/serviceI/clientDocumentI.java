@@ -29,7 +29,7 @@ public class clientDocumentI implements clientDocumentS {
 	@Autowired
 	clientDocumentsR clientDocumentsR;
 
-	String apiFilePath = "G:\\chandran\\java\\springCrud\\documents\\apiDocuments";
+	String apiFilePath = "C:\\Users\\murug\\projects\\LearnSpringBoot-main\\documents\\apiDocuments";
 
 	@Override
 	public response uploadImage(List<MultipartFile> multipartFiles, String uploadedBy, long userAccountId) {

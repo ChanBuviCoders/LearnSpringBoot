@@ -6,8 +6,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class clientDocuments {
 
 	@Id
@@ -20,70 +26,6 @@ public class clientDocuments {
 	private String uploadedBy;
 	private Date uploadedDate;
 	private long userAccountId;
-
-	public long getFileId() {
-		return fileId;
-	}
-
-	public void setFileId(long fileId) {
-		this.fileId = fileId;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public String getFileSize() {
-		return fileSize;
-	}
-
-	public void setFileSize(String fileSize) {
-		this.fileSize = fileSize;
-	}
-
-	public String getFileType() {
-		return fileType;
-	}
-
-	public void setFileType(String fileType) {
-		this.fileType = fileType;
-	}
-
-	public String getFilePath() {
-		return filePath;
-	}
-
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
-	public String getUploadedBy() {
-		return uploadedBy;
-	}
-
-	public void setUploadedBy(String uploadedBy) {
-		this.uploadedBy = uploadedBy;
-	}
-
-	public Date getUploadedDate() {
-		return uploadedDate;
-	}
-
-	public void setUploadedDate(Date uploadedDate) {
-		this.uploadedDate = uploadedDate;
-	}
-
-	public long getUserAccountId() {
-		return userAccountId;
-	}
-
-	public void setUserAccountId(long userAccountId) {
-		this.userAccountId = userAccountId;
-	}
 
 //    @ManyToOne(fetch = FetchType.EAGER)
 //    @JoinColumn(name="userAccountId",nullable = false)

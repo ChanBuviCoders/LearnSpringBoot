@@ -9,8 +9,8 @@ import config.Entity.userAccount;
 public interface userAccountR extends JpaRepository<userAccount, Long> {
 
 	userAccount getUserAccountByUserName(String userName);
-    
-	userAccount findByUserNameAndPassword(String userName,String password);
+
+	userAccount findByUserNameAndPassword(String userName, String password);
 
 	userAccount findByUserAccountId(Long userAccountId);
 

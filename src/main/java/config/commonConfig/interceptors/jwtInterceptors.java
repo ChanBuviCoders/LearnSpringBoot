@@ -38,7 +38,7 @@ public class jwtInterceptors extends WebRequestHandlerInterceptorAdapter {
 			}
 		} catch (Exception e) {
 			// TODO: handle exception
-			System.out.println("---validate token---"+e);
+			System.out.println("---validate token---" + e);
 			response.sendError(504, "full authentication error");
 		}
 
