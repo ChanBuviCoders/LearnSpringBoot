@@ -45,7 +45,7 @@ public class authServiceI implements authService {
 				return response;
 			} else {
 				response.setStatus(false);
-				response.setMessage("User Authentication Failure");
+				response.setMessage("Invalid username or password");
 				return response;
 			}
 		} catch (Exception e) {

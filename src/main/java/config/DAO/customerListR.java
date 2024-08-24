@@ -15,7 +15,7 @@ public interface customerListR extends JpaRepository<customerList, Long> {
 
 	List<customerList> findAllByUserAccountId(long userAccountId);
 
-	@Query(value = "select distinct (loanType) from customerList where userAccount_id=:userAccountId  ", nativeQuery = true)
+	@Query(value = "select distinct (loanType) from customerList where userAccountId=:userAccountId  ", nativeQuery = true)
 	public List<String> findDistinctLoanTypeByUserAccountId(@Param("userAccountId") Long UserAccountId);
 
 	@Query(value = "SELECT distinct loanType  FROM customerList where userAccountId=:userAccountId;", nativeQuery = true)
