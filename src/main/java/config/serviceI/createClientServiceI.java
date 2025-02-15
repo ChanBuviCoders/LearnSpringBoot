@@ -43,6 +43,7 @@ public class createClientServiceI implements createClientService {
 							base64ToFile(userAccount.getAdharImagePath(), userAccount.getMobileNumber(), "adharImage"));
 					userAccount.setPanImagePath(
 							base64ToFile(userAccount.getPanImagePath(), userAccount.getMobileNumber(), "panImage"));
+					userAccount.setLoginAttempt(0);
 					userAccountR.save(userAccount);
 					response.setStatus(true);
 					response.setMessage("Created Successfully");

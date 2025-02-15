@@ -1,6 +1,7 @@
 
 package config.DAO;
 
+import java.sql.Date;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,6 +15,10 @@ import config.Entity.customerList;
 public interface customerListR extends JpaRepository<customerList, Long> {
 
 	List<customerList> findAllByUserAccountId(long userAccountId);
+
+	List<customerList> findAllByUserAccountIdAndLoanType(long userAccountId, String loanType);
+
+	List<customerList> findByLoanType(String loanType);
 
 	@Query(value = "select distinct (loanType) from customerList where userAccountId=:userAccountId  ", nativeQuery = true)
 	public List<String> findDistinctLoanTypeByUserAccountId(@Param("userAccountId") Long UserAccountId);
@@ -33,5 +38,10 @@ public interface customerListR extends JpaRepository<customerList, Long> {
 			@Param("userAccountId") long userAccountId);
 
 	customerList findByCustomerId(long customerId);
+
+	List<customerList> findByLoanTypeAndUserAccountId(String loanType, Long userAccountId);
+
+	List<customerList> findByLoanTypeAndStartDateLessThanEqualAndUserAccountId(String loanType, Date date,
+			Long userAccountId);
 
 }

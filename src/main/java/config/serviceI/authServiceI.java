@@ -34,14 +34,31 @@ public class authServiceI implements authService {
 	public response authSession(userAccount userAccount) {
 		response response = new response();
 		try {
-			userAccount ua = userAccountR.findByUserNameAndPassword(userAccount.getUserName(),
-					userAccount.getPassword());
+			userAccount ua = userAccountR.findByUserName(userAccount.getUserName());
 			if (ua != null) {
-				ua.setActive(true);
-				userAccountR.save(ua);
-				response.setToken(jwtService.generateToken(ua));
-				response.setStatus(true);
-				response.setMessage("User Authentication Success");
+				if (ua.getLoginAttempt() < 3) {
+					if (ua.getPassword().equals(userAccount.getPassword())) {
+						ua.setActive(true);
+						ua.setLoginAttempt(0);
+						userAccountR.save(ua);
+						response.setToken(jwtService.generateToken(ua));
+						response.setStatus(true);
+						response.setMessage("User Authentication Success");
+					} else {
+						ua.setActive(false);
+						ua.setLoginAttempt(ua.getLoginAttempt() + 1);
+						userAccountR.save(ua);
+						response.setStatus(false);
+						response.setMessage("Incorrect password, " + "you have only " + (3 - ua.getLoginAttempt())
+								+ " more attempt" + (3 - ua.getLoginAttempt() > 1 ? "s" : ""));
+						if (ua.getLoginAttempt() > 2)
+							response.setMessage("Your account has locked");
+					}
+				} else {
+					response.setStatus(false);
+					response.setMessage("Your account has locked");
+				}
+
 				return response;
 			} else {
 				response.setStatus(false);

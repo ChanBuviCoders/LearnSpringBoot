@@ -44,6 +44,7 @@ public class userAccount {
 	private Date currentLoginDate;
 	private Long adharNumber;
 	private Long userGroupId;
+	private Integer loginAttempt;
 	private boolean isActive;
 
 //	@OneToMany(mappedBy = "userAccount",cascade = CascadeType.ALL)

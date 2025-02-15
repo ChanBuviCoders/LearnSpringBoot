@@ -1,7 +1,9 @@
 package config.commonConfig.interceptors;
 
+import java.net.http.HttpResponse;
 import java.util.Arrays;
 
+import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequestInterceptor;
@@ -39,7 +41,9 @@ public class jwtInterceptors extends WebRequestHandlerInterceptorAdapter {
 		} catch (Exception e) {
 			// TODO: handle exception
 			System.out.println("---validate token---" + e);
-			response.sendError(504, "full authentication error");
+			response.setStatus(HttpStatus.SC_UNAUTHORIZED);
+			response.setHeader("TokenStatus", "Expired");
+			
 		}
 
 		return super.preHandle(request, response, handler);

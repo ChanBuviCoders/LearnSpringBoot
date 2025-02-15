@@ -1,8 +1,13 @@
 package config.serviceI;
 
+import java.sql.Date;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Optional;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -12,7 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -20,23 +24,35 @@ import com.twilio.Twilio;
 import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
+import config.DAO.PaymentsR;
 import config.DAO.customerListR;
 import config.DAO.testPageable;
+import config.DTO.CustomerPaymentDTO;
+import config.DTO.PaymentInput;
 import config.DTO.response;
+import config.Entity.Payments;
 import config.Entity.customerList;
 import config.Service.customerService;
+import config.commonConfig.CustomException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class customerServiceI implements customerService {
 	@Autowired
 	customerListR customerListR;
 
-	/* **************************************************************************************************************************/
-	@RequestMapping(value = "/addCustomer", method = RequestMethod.POST, produces = "application/Json")
-	public response addCustomer(@RequestBody customerList customerList) {
+	/* *************************************************************************/
+	@Override
+	public response addCustomer(customerList customerList) {
 		response response = new response();
 		try {
 			customerList.getLoanAmount();
+			if (customerList.getLoanType().equalsIgnoreCase("weekly")) {
+				Long tP = customerList.getLoanAmount() + (20 * customerList.getLoanAmount()) / 100;
+				customerList.setTotalPayable(tP);
+			} else {
+				customerList.setTotalPayable(customerList.getTotalPayable());
+			}
 			customerListR.save(customerList);
 			response.setMessage("Customer Added Successfully");
 			response.setStatus(true);
@@ -48,18 +64,7 @@ public class customerServiceI implements customerService {
 		}
 	}
 
-	@RequestMapping(value = "/getCustomerDetailsById", method = RequestMethod.POST, produces = "application/Json")
-	public Optional<customerList> getCustomerDetailsById(@RequestBody customerList customerList) {
-		Optional<customerList> customerDetails = null;
-		try {
-			customerDetails = customerListR.findById(customerList.getCustomerId());
-			return customerDetails;
-		} catch (Exception e) {
-			return customerDetails;
-		}
-	}
-
-//	---------------------------------------------update customer------------------------------------->
+	/*---------------------------------------------update customer-------------------------------------*/
 	@Override
 	public response updateCustomer(customerList customerList) {
 		response response = new response();
@@ -90,7 +95,8 @@ public class customerServiceI implements customerService {
 		}
 	}
 
-//	---------------------------------------------delete customer---------------------------------------->
+	// ---------------------------------------------delete
+	// customer---------------------------------------->
 
 	@Override
 	public response deleteCustomerByCustomerId(long customerId) {
@@ -108,11 +114,35 @@ public class customerServiceI implements customerService {
 	}
 
 	@Override
-	public response getAllCustomerListByUserAccountId(long userAccountId) {
+	public response getAllCustomerListByUserAccountId(customerList cL) {
 		List<customerList> acList = null;
 		response response = new response();
 		try {
-			acList = (List<customerList>) customerListR.findAllByUserAccountId(userAccountId);
+			if (cL.getLoanType().equalsIgnoreCase("all")) {
+				acList = (List<customerList>) customerListR.findAllByUserAccountId(cL.getUserAccountId());
+			} else {
+				acList = (List<customerList>) customerListR.findAllByUserAccountIdAndLoanType(cL.getUserAccountId(),
+						cL.getLoanType());
+			}
+			if (acList.size() > 0) {
+				Map<String, List<customerList>> nl = acList.stream()
+						.collect(Collectors.groupingBy(customerList::getLoanType));
+				nl.forEach((loanType, customerList) -> {
+					System.out.println("Department: " + loanType);
+					customerList.forEach(user -> System.out.println(" - " + user.getFirstName()));
+				});
+				Map<String, Map<Long, List<customerList>>> map = acList.stream().collect(Collectors
+						.groupingBy(customerList::getLoanType, Collectors.groupingBy(customerList::getLoanAmount)));
+				map.forEach((loantype, values) -> {
+					System.out.println("loanType" + loantype);
+					values.forEach((loanAmount, customerL) -> {
+						System.out.println("--loanAmount" + loanAmount);
+						customerL.forEach(cus -> {
+							System.out.println("======>" + cus.getFirstName());
+						});
+					});
+				});
+			}
 			response.setData(acList);
 			response.setStatus(true);
 			return response;
@@ -213,4 +243,168 @@ public class customerServiceI implements customerService {
 		}
 		return json;
 	}
+
+	@Autowired
+	PaymentsR paymentR;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public response getPaymentList(PaymentInput pi) {
+		response response = new response();
+		try {
+			List<Payments> pl = paymentR.findAllByLoanTypeAndDate(pi.getLoanType(), pi.getDate());
+			List<customerList> cl = customerListR.findByLoanTypeAndStartDateLessThanEqualAndUserAccountId(
+					pi.getLoanType(), pi.getDate(), pi.getUserAccountId());
+			if (pl.size() == 0) {
+				cl.stream().forEach(m -> {
+					createPaymentList(m, pi);
+				});
+
+			} else if (pl.size() != cl.size()) {
+				List<Long> customerIdList = pl.stream().map(p -> p.getCustomerId()).collect(Collectors.toList());
+				cl.stream().filter(c -> !customerIdList.contains(c.getCustomerId())).forEach(m -> {
+					createPaymentList(m, pi);
+				});
+			}
+			Long todayCredit = paymentR.findTodayCredit(pi.getDate(), pi.getLoanType());
+			JSONObject json = new JSONObject();
+			json.put("todayCredit", todayCredit);
+			json.put("paymentList", getCustomerPaymentList(pi));
+			response.setData(json);
+			response.setStatus(true);
+			return response;
+		} catch (Exception e) {
+			response.setMessage("Somthing Went Wrong");
+			response.setStatus(false);
+			return response;
+		}
+	}
+
+	public void createPaymentList(customerList c, PaymentInput pi) {
+		try {
+
+			Payments payment = new Payments();
+			payment.setCustomerId(c.getCustomerId());
+			if (pi.getLoanType().equalsIgnoreCase("Daily"))
+				payment.setAmount(c.getLoanAmount() * 1 / 100);
+			else if (pi.getLoanType().equalsIgnoreCase("Weekly"))
+				payment.setAmount(c.getLoanAmount() * 10 / 100);
+			else
+				payment.setAmount(c.getLoanAmount());
+			payment.setDate(pi.getDate());
+			payment.setLoanType(c.getLoanType());
+			paymentR.save(payment);
+
+		} catch (Exception e) {
+			System.out.println("Exception in CreatePayment Method");
+		}
+	}
+
+	public List<CustomerPaymentDTO> getCustomerPaymentList(PaymentInput pi) {
+		List<CustomerPaymentDTO> cpdl = new ArrayList<CustomerPaymentDTO>();
+		List<Payments> pl = paymentR.findAllByLoanTypeAndDate(pi.getLoanType(), pi.getDate());
+		if (pl.size() > 0) {
+			for (int j = 0; j < pl.size(); j++) {
+				Payments p = pl.get(j);
+				CustomerPaymentDTO cpd = new CustomerPaymentDTO();
+				cpd.setAmount(p.getAmount());
+				cpd.setDate(p.getDate());
+				cpd.setPaymentId(p.getPaymentId());
+				cpd.setPaymentStatus(p.getPaymentStatus());
+				cpd.setPaymentMode(p.getPaymentMode());
+				cpd.setFirstName(p.getCustomerList().getFirstName());
+				cpd.setLastName(p.getCustomerList().getLastName());
+				cpd.setLoanAmount(p.getCustomerList().getLoanAmount());
+				cpd.setLoanType(p.getCustomerList().getLoanType());
+				cpd.setTotalPayable(p.getCustomerList().getTotalPayable());
+				cpd.setTotalPaid(p.getCustomerList().getTotalPaid());
+				cpd.setBalanceAmount(p.getCustomerList().getTotalPayable() - p.getCustomerList().getTotalPaid());
+				cpdl.add(cpd);
+			}
+
+		}
+
+		return cpdl;
+	}
+
+	@Override
+	public response changePaymentStatus(CustomerPaymentDTO cpd) {
+		response response = new response();
+		try {
+			Payments payment = paymentR.findByPaymentId(cpd.getPaymentId());
+			payment.setPaymentStatus(cpd.getPaymentStatus());
+			payment.setAmount(cpd.getAmount());
+			payment.setPaymentMode(cpd.getPaymentMode());
+			paymentR.save(payment);
+			setTotalPaidAmountByCustomerId(payment.getCustomerId());
+			Map<String, Long> tc = new HashMap<String, Long>();
+			tc.put("todayCredit", getTodayCreditAmount(cpd.getDate(), cpd.getLoanType()));
+			response.setData(tc);
+			response.setStatus(true);
+			return response;
+		} catch (Exception e) {
+			response.setMessage("Somthing Went Wrong");
+			response.setStatus(false);
+			return response;
+		}
+	}
+
+	public Long getTodayCreditAmount(Date date, String loanType) {
+		try {
+			return paymentR.findTodayCredit(date, loanType);
+		} catch (Exception e) {
+			System.out.println("exception in setTotalPaidAmountByCustomerId method" + e);
+		}
+		return null;
+	}
+
+	public void setTotalPaidAmountByCustomerId(Long customerId) {
+		try {
+			customerList customerList = customerListR.findByCustomerId(customerId);
+			Long tpa = paymentR.findTotalPaidAmountByCustomerId(customerId);
+			customerList.setTotalPaid(tpa != null ? tpa : 0L);
+			customerListR.save(customerList);
+		} catch (Exception e) {
+			System.out.println("exception in setTotalPaidAmountByCustomerId method" + e);
+		}
+	}
+
+	@Override
+	public response getPaymentListByCustomerId(Long customerId) {
+		response response = new response();
+		try {
+			List<Payments> pl = paymentR.findAllByCustomerIdAndPaymentStatusTrue(customerId);
+			response.setData(pl);
+			response.setStatus(true);
+			return response;
+		} catch (Exception e) {
+			response.setMessage("Somthing Went Wrong");
+			response.setStatus(false);
+			return response;
+		}
+	}
+
+	public void stringOccurenceProgram() {
+		String inputStr = "hi this is chandran";
+		char[] charArray = inputStr.toCharArray();
+		Map<Character, Long> charOccurence = new LinkedHashMap<Character, Long>();
+		for (char c : charArray) {
+			if (charOccurence.containsKey(c)) {
+				Long count = charOccurence.get(c);
+				charOccurence.put(c, count + 1);
+			} else {
+				charOccurence.put(c, 1L);
+			}
+		}
+		for (Map.Entry<Character, Long> entry : charOccurence.entrySet()) {
+			System.out.println(entry.getKey() + " count " + entry.getValue());
+		}
+	}
+
+	@Transactional(rollbackOn = CustomException.class)
+	public void vowelsReplaceProgram() throws CustomException {
+		String inputStr = "hi this is chandran".replaceAll("[aeiouAEIOU]", "@");
+		throw new CustomException("custom Exception created success fully");
+	}
+
 }

@@ -16,4 +16,6 @@ public interface userAccountR extends JpaRepository<userAccount, Long> {
 
 	userAccount findByUserAccountId(long userAccountId);
 
+	userAccount findByUserName(String userName);
+
 }

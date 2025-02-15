@@ -10,14 +10,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import config.DAO.testPageable;
+import config.DTO.CustomerPaymentDTO;
+import config.DTO.PaymentInput;
 import config.DTO.response;
+import config.Entity.Payments;
 import config.Entity.customerList;
 import config.Entity.userAccount;
 import config.Service.customerService;
@@ -84,11 +89,11 @@ public class customerController {
 	}
 
 	@RequestMapping(value = "/getAllCustomerList", method = RequestMethod.POST, produces = "application/Json")
-	public response getAllCustomerList(@RequestBody userAccount userAccount) {
+	public response getAllCustomerList(@RequestBody customerList customerList) {
 		response response = new response();
 
 		try {
-			return customerS.getAllCustomerListByUserAccountId(userAccount.getUserAccountId());
+			return customerS.getAllCustomerListByUserAccountId(customerList);
 		} catch (Exception e) {
 			response.setMessage("Somthing Went Wrong");
 			response.setStatus(false);
@@ -120,6 +125,42 @@ public class customerController {
 
 		try {
 			return customerS.getchartDetails(userAccountId, type);
+		} catch (Exception e) {
+			response.setMessage("Somthing Went Wrong");
+			response.setStatus(false);
+			return response;
+		}
+	}
+
+	@PostMapping("/getPaymentList")
+	public response getPaymentList(@RequestBody PaymentInput pi) {
+		response response = new response();
+		try {
+			return customerS.getPaymentList(pi);
+		} catch (Exception e) {
+			response.setMessage("Somthing Went Wrong");
+			response.setStatus(false);
+			return response;
+		}
+	}
+
+	@PostMapping("/changePaymentStatus")
+	public response changePaymentStatus(@RequestBody CustomerPaymentDTO cpd) {
+		response response = new response();
+		try {
+			return customerS.changePaymentStatus(cpd);
+		} catch (Exception e) {
+			response.setMessage("Somthing Went Wrong");
+			response.setStatus(false);
+			return response;
+		}
+	}
+
+	@GetMapping("/getPaymentListByCustomerId/{customerId}")
+	public response getPaymentListByCustomerId(@PathVariable("customerId") Long customerId) {
+		response response = new response();
+		try {
+			return customerS.getPaymentListByCustomerId(customerId);
 		} catch (Exception e) {
 			response.setMessage("Somthing Went Wrong");
 			response.setStatus(false);

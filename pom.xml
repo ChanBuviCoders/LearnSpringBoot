@@ -40,6 +40,7 @@
 			<artifactId>jjwt</artifactId>
 			<version>0.9.1</version>
 		</dependency>
+		<!--For json object-->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
@@ -60,11 +61,11 @@
 			<artifactId>tomcat-jasper</artifactId>
 			<version>10.1.4</version>
 		</dependency>
-		<dependency>
+	<!--	<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -92,16 +93,21 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-mail</artifactId>
 		</dependency>
-		<!--
-		https://javatechonline.com/how-to-secure-spring-boot-application-by-captcha-validation/ -->
 		<!-- ************************capcha geneartion************************** -->
-		<!-- https://mvnrepository.com/artifact/cn.apiclub.tool/simplecaptcha -->
-
 		<dependency>
 			<groupId>cn.apiclub.tool</groupId>
 			<artifactId>simplecaptcha</artifactId>
 			<version>1.2.2</version> <!-- we have to manage version here -->
 		</dependency>
+		<!--For microservice dependancy-->
+		<!--<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>-->
 
 		<!-- https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api -->
 

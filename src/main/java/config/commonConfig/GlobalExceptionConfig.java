@@ -19,6 +19,6 @@ public class GlobalExceptionConfig {
 	private ResponseEntity<String> accessDeniedException(AccessDeniedException ADE) {
 
 		System.out.println(ADE);
-		return ResponseEntity.status(HttpStatus.SC_GATEWAY_TIMEOUT).body("Full Authentication Error");
+		return ResponseEntity.status(HttpStatus.SC_UNAUTHORIZED).body("Full Authentication Error");
 	}
 }

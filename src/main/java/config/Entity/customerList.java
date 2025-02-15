@@ -1,11 +1,13 @@
 package config.Entity;
 
 import java.sql.Date;
+import java.util.Set;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,19 +19,20 @@ import lombok.NoArgsConstructor;
 public class customerList {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long customerId;
+	private Long customerId;
 	private String firstName;
 	private String lastName;
 	private String gender;
-	private long loanAmount;
+	private Long loanAmount;
 	private String loanType;
-	private long mobileNumber;
+	private Long mobileNumber;
 	private Date startDate;
 	private Date endDate;
-	private long userAccountId;
+	private Long userAccountId;
+	private Long totalPayable;
+	private Long totalPaid;
 
-	// @ManyToOne
-//	@JoinColumn(name = "userAccountId",referencedColumnName = "userAccountId",updatable = false,nullable = false)
-//	private userAccount userAccount;
+	@OneToMany(mappedBy = "customerList")
+	private Set<Payments> payments;
 
 }

@@ -20,7 +20,7 @@ import config.commonConfig.jsonWebToken;
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api")
-public class authController {
+public class AuthController {
 
 	@Autowired
 	jsonWebToken jwtService;

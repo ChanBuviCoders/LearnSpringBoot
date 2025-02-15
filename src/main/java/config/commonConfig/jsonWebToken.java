@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import config.Entity.userAccount;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -27,6 +28,7 @@ public class jsonWebToken {
 	public void verifyToken(String token) {
 
 		try {
+			Jws<Claims> pc=Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
 			Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
 		} catch (Exception e) {
 			// TODO: handle exception
