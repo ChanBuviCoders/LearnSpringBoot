@@ -19,10 +19,10 @@ public interface PaymentsR extends JpaRepository<Payments, Long> {
 
 	List<Payments> findAllByCustomerIdAndPaymentStatusTrue(Long customerId);
 
-	@Query(value = "SELECT SUM(amount) FROM payments WHERE date =:date AND paymentStatus =1 AND loanType = :loanType", nativeQuery = true)
+	@Query(value = "SELECT SUM(amount) FROM Payments WHERE date =:date AND paymentStatus =1 AND loanType = :loanType", nativeQuery = true)
 	Long findTodayCredit(@Param("date") Date date, @Param("loanType") String loanType);
 
-	@Query(value="SELECT SUM(amount) FROM payments WHERE customerId = :customerId AND paymentStatus = 1",nativeQuery = true)
+	@Query(value="SELECT SUM(amount) FROM Payments WHERE customerId = :customerId AND paymentStatus = 1",nativeQuery = true)
 	Long findTotalPaidAmountByCustomerId(@Param("customerId") Long customerId);
 
 }

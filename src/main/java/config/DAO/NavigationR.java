@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 import config.Entity.NavigationMenu;
 
 public interface NavigationR extends JpaRepository<NavigationMenu, Long> {
-	@Query(value = "select nm.menuId,nm.menuName,up.isView,up.isEdit,up.isDelete from navigationMenu as nm "
-			+ " join userPrivilegeMapping as upm on upm.menuId=nm.menuId"
-			+ " join userPrivilege as up on up.privilegeId=upm.privilegeId"
+	@Query(value = "select nm.menuId,nm.menuName,up.isView,up.isEdit,up.isDelete from NavigationMenu as nm "
+			+ " join UserPrivilegeMapping as upm on upm.menuId=nm.menuId"
+			+ " join UserPrivilege as up on up.privilegeId=upm.privilegeId"
 			+ " where upm.userGroupId=:userGroupId", nativeQuery = true)
 	List<Object[]> getNavigationMenuByUserGroupId(@Param("userGroupId") Long userGroupId);
 
