@@ -4,8 +4,6 @@ import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,7 +41,7 @@ public class customerController {
 
 	/* ****************************************************************************************/
 	@RequestMapping(value = "/addCustomer", method = RequestMethod.POST, produces = "application/Json")
-	public response addCustomer(@Valid @RequestBody customerList customerList) {
+	public response addCustomer(@RequestBody customerList customerList) {
 		response response = new response();
 		try {
 			return customerS.addCustomer(customerList);
