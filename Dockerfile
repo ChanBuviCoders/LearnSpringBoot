@@ -10,7 +10,7 @@ RUN mvn dependency:go-offline -B
 
 # Copy source code and build package
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests --no-transfer-progress
 
 # ==========================================
 # STAGE 2: Lightweight Runtime Environment
