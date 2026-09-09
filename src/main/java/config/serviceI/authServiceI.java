@@ -52,11 +52,11 @@ public class authServiceI implements authService {
 						response.setMessage("Incorrect password, " + "you have only " + (3 - ua.getLoginAttempt())
 								+ " more attempt" + (3 - ua.getLoginAttempt() > 1 ? "s" : ""));
 						if (ua.getLoginAttempt() > 2)
-							response.setMessage("Your account has locked");
+							response.setMessage("Your account has been locked");
 					}
 				} else {
 					response.setStatus(false);
-					response.setMessage("Your account has locked");
+					response.setMessage("Your account has been locked");
 				}
 
 				return response;

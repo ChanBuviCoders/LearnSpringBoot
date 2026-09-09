@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -328,9 +329,10 @@ public class customerServiceI implements customerService {
 	}
 
 	@Override
+	@Transactional
 	public response changePaymentStatus(CustomerPaymentDTO cpd) {
 		response response = new response();
-		try {
+//		try {
 			Payments payment = paymentR.findByPaymentId(cpd.getPaymentId());
 			payment.setPaymentStatus(cpd.getPaymentStatus());
 			payment.setAmount(cpd.getAmount());
@@ -341,12 +343,13 @@ public class customerServiceI implements customerService {
 			tc.put("todayCredit", getTodayCreditAmount(cpd.getDate(), cpd.getLoanType()));
 			response.setData(tc);
 			response.setStatus(true);
+		    TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
 			return response;
-		} catch (Exception e) {
-			response.setMessage("Somthing Went Wrong");
-			response.setStatus(false);
-			return response;
-		}
+//		} catch (Exception e) {
+//			response.setMessage("Somthing Went Wrong");
+//			response.setStatus(false);
+//			return response;
+//		}
 	}
 
 	public Long getTodayCreditAmount(Date date, String loanType) {

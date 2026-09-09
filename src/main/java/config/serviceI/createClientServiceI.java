@@ -67,7 +67,7 @@ public class createClientServiceI implements createClientService {
 		}
 	}
 
-	String clientDocumentsPath = "C:\\Users\\murug\\projects\\LearnSpringBoot-main\\documents\\clientDocuments";
+	String clientDocumentsPath = "B:\\projects\\SpringBoot\\LearnSpringBoot-main\\documents\\clientDocuments";
 
 	public String base64ToFile(String base64String, long mobileNumber, String documentName)
 			throws FileNotFoundException, IOException {

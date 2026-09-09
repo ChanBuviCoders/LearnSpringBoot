@@ -3,6 +3,7 @@ package config.Entity;
 import java.sql.Date;
 import java.util.Set;
 
+import config.MobileNumberValidation;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,6 +26,8 @@ public class customerList {
 	private String gender;
 	private Long loanAmount;
 	private String loanType;
+
+	@MobileNumberValidation
 	private Long mobileNumber;
 	private Date startDate;
 	private Date endDate;

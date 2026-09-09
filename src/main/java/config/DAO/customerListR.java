@@ -14,7 +14,9 @@ import config.Entity.customerList;
 @Repository
 public interface customerListR extends JpaRepository<customerList, Long> {
 
-	List<customerList> findAllByUserAccountId(long userAccountId);
+	List<customerList> findAllByUserAccountId(Long userAccountId);
+
+	List<customerList> findAllByMobileNumber(Long mobileNumber);
 
 	List<customerList> findAllByUserAccountIdAndLoanType(long userAccountId, String loanType);
 
