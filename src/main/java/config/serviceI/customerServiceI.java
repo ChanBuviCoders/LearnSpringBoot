@@ -26,26 +26,26 @@ import com.twilio.rest.api.v2010.account.Message;
 import com.twilio.type.PhoneNumber;
 
 import config.DAO.PaymentsR;
-import config.DAO.customerListR;
-import config.DAO.testPageable;
+import config.DAO.CustomerListR;
+import config.DAO.TestPageable;
 import config.DTO.CustomerPaymentDTO;
 import config.DTO.PaymentInput;
-import config.DTO.response;
+import config.DTO.Response;
 import config.Entity.Payments;
-import config.Entity.customerList;
-import config.Service.customerService;
+import config.Entity.CustomerList;
+import config.Service.CustomerService;
 import config.commonConfig.CustomException;
 import jakarta.transaction.Transactional;
 
 @Service
-public class customerServiceI implements customerService {
+public class CustomerServiceI implements CustomerService {
 	@Autowired
-	customerListR customerListR;
+	CustomerListR customerListR;
 
 	/* *************************************************************************/
 	@Override
-	public response addCustomer(customerList customerList) {
-		response response = new response();
+	public Response addCustomer(CustomerList customerList) {
+		Response response = new Response();
 		try {
 			customerList.getLoanAmount();
 			if (customerList.getLoanType().equalsIgnoreCase("weekly")) {
@@ -67,12 +67,12 @@ public class customerServiceI implements customerService {
 
 	/*---------------------------------------------update customer-------------------------------------*/
 	@Override
-	public response updateCustomer(customerList customerList) {
-		response response = new response();
+	public Response updateCustomer(CustomerList customerList) {
+		Response response = new Response();
 		try {
 
 			if (customerList != null) {
-				customerList customerListFr = customerListR.findByCustomerId(customerList.getCustomerId());
+				CustomerList customerListFr = customerListR.findByCustomerId(customerList.getCustomerId());
 				customerListFr.setFirstName(customerList.getFirstName());
 				customerListFr.setLastName(customerList.getLastName());
 				customerListFr.setGender(customerList.getGender());
@@ -100,8 +100,8 @@ public class customerServiceI implements customerService {
 	// customer---------------------------------------->
 
 	@Override
-	public response deleteCustomerByCustomerId(long customerId) {
-		response response = new response();
+	public Response deleteCustomerByCustomerId(long customerId) {
+		Response response = new Response();
 		try {
 			customerListR.deleteById(customerId);
 			response.setMessage("Deleted Successfully");
@@ -115,25 +115,25 @@ public class customerServiceI implements customerService {
 	}
 
 	@Override
-	public response getAllCustomerListByUserAccountId(customerList cL) {
-		List<customerList> acList = null;
-		response response = new response();
+	public Response getAllCustomerListByUserAccountId(CustomerList cL) {
+		List<CustomerList> acList = null;
+		Response response = new Response();
 		try {
 			if (cL.getLoanType().equalsIgnoreCase("all")) {
-				acList = (List<customerList>) customerListR.findAllByUserAccountId(cL.getUserAccountId());
+				acList = (List<CustomerList>) customerListR.findAllByUserAccountId(cL.getUserAccountId());
 			} else {
-				acList = (List<customerList>) customerListR.findAllByUserAccountIdAndLoanType(cL.getUserAccountId(),
+				acList = (List<CustomerList>) customerListR.findAllByUserAccountIdAndLoanType(cL.getUserAccountId(),
 						cL.getLoanType());
 			}
 			if (acList.size() > 0) {
-				Map<String, List<customerList>> nl = acList.stream()
-						.collect(Collectors.groupingBy(customerList::getLoanType));
+				Map<String, List<CustomerList>> nl = acList.stream()
+						.collect(Collectors.groupingBy(CustomerList::getLoanType));
 				nl.forEach((loanType, customerList) -> {
 					System.out.println("Department: " + loanType);
 					customerList.forEach(user -> System.out.println(" - " + user.getFirstName()));
 				});
-				Map<String, Map<Long, List<customerList>>> map = acList.stream().collect(Collectors
-						.groupingBy(customerList::getLoanType, Collectors.groupingBy(customerList::getLoanAmount)));
+				Map<String, Map<Long, List<CustomerList>>> map = acList.stream().collect(Collectors
+						.groupingBy(CustomerList::getLoanType, Collectors.groupingBy(CustomerList::getLoanAmount)));
 				map.forEach((loantype, values) -> {
 					System.out.println("loanType" + loantype);
 					values.forEach((loanAmount, customerL) -> {
@@ -155,11 +155,11 @@ public class customerServiceI implements customerService {
 	}
 
 	@Autowired
-	testPageable pagingDao;
+	TestPageable pagingDao;
 
 	@RequestMapping(value = "/getAllCustomerList1", method = RequestMethod.GET, produces = "application/Json")
-	public ResponseEntity<List<customerList>> getAllCustomerList1(Pageable pageable) {
-		Page<customerList> acList = null;
+	public ResponseEntity<List<CustomerList>> getAllCustomerList1(Pageable pageable) {
+		Page<CustomerList> acList = null;
 		try {
 			acList = pagingDao.findAll(pageable);
 			acList.getContent();
@@ -185,8 +185,8 @@ public class customerServiceI implements customerService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public response getchartDetails(Long userAccountId, Byte type) {
-		response response = new response();
+	public Response getchartDetails(Long userAccountId, Byte type) {
+		Response response = new Response();
 		try {
 
 			JSONObject json = new JSONObject();
@@ -250,11 +250,11 @@ public class customerServiceI implements customerService {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public response getPaymentList(PaymentInput pi) {
-		response response = new response();
+	public Response getPaymentList(PaymentInput pi) {
+		Response response = new Response();
 		try {
 			List<Payments> pl = paymentR.findAllByLoanTypeAndDate(pi.getLoanType(), pi.getDate());
-			List<customerList> cl = customerListR.findByLoanTypeAndStartDateLessThanEqualAndUserAccountId(
+			List<CustomerList> cl = customerListR.findByLoanTypeAndStartDateLessThanEqualAndUserAccountId(
 					pi.getLoanType(), pi.getDate(), pi.getUserAccountId());
 			if (pl.size() == 0) {
 				cl.stream().forEach(m -> {
@@ -281,7 +281,7 @@ public class customerServiceI implements customerService {
 		}
 	}
 
-	public void createPaymentList(customerList c, PaymentInput pi) {
+	public void createPaymentList(CustomerList c, PaymentInput pi) {
 		try {
 
 			Payments payment = new Payments();
@@ -330,8 +330,8 @@ public class customerServiceI implements customerService {
 
 	@Override
 	@Transactional
-	public response changePaymentStatus(CustomerPaymentDTO cpd) {
-		response response = new response();
+	public Response changePaymentStatus(CustomerPaymentDTO cpd) {
+		Response response = new Response();
 //		try {
 			Payments payment = paymentR.findByPaymentId(cpd.getPaymentId());
 			payment.setPaymentStatus(cpd.getPaymentStatus());
@@ -363,7 +363,7 @@ public class customerServiceI implements customerService {
 
 	public void setTotalPaidAmountByCustomerId(Long customerId) {
 		try {
-			customerList customerList = customerListR.findByCustomerId(customerId);
+			CustomerList customerList = customerListR.findByCustomerId(customerId);
 			Long tpa = paymentR.findTotalPaidAmountByCustomerId(customerId);
 			customerList.setTotalPaid(tpa != null ? tpa : 0L);
 			customerListR.save(customerList);
@@ -373,8 +373,8 @@ public class customerServiceI implements customerService {
 	}
 
 	@Override
-	public response getPaymentListByCustomerId(Long customerId) {
-		response response = new response();
+	public Response getPaymentListByCustomerId(Long customerId) {
+		Response response = new Response();
 		try {
 			List<Payments> pl = paymentR.findAllByCustomerIdAndPaymentStatusTrue(customerId);
 			response.setData(pl);

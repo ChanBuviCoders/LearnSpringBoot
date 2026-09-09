@@ -11,11 +11,11 @@ import com.google.gson.JsonObject;
 
 import cn.apiclub.captcha.Captcha;
 import config.Capcha.CaptchaUtil;
-import config.DTO.capchaModel;
-import config.DTO.response;
-import config.Entity.userAccount;
-import config.Service.authService;
-import config.commonConfig.jsonWebToken;
+import config.DTO.CapchaModel;
+import config.DTO.Response;
+import config.Entity.UserAccount;
+import config.Service.AuthService;
+import config.commonConfig.JsonWebToken;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -23,14 +23,14 @@ import config.commonConfig.jsonWebToken;
 public class AuthController {
 
 	@Autowired
-	jsonWebToken jwtService;
+	JsonWebToken jwtService;
 
 	@Autowired
-	authService authService;
+	AuthService authService;
 
 	@RequestMapping(value = "/authSession", method = RequestMethod.POST, produces = "application/json")
-	public response authSession(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response authSession(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 
 		try {
 			if (userAccount.getUserName() != null && userAccount.getPassword() != null) {
@@ -50,8 +50,8 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/getSession", method = RequestMethod.POST, produces = "application/Json")
-	public response getSession(@RequestBody String jwttoken) {
-		response response = new response();
+	public Response getSession(@RequestBody String jwttoken) {
+		Response response = new Response();
 		try {
 			if (!jwttoken.isEmpty()) {
 
@@ -68,7 +68,7 @@ public class AuthController {
 	public String getCapcha() {
 		JsonObject json = new JsonObject();
 		try {
-			capchaModel capchaModel = generateCapcha();
+			CapchaModel capchaModel = generateCapcha();
 			json.addProperty("value", capchaModel.getHiddenCaptcha());
 			json.addProperty("image", capchaModel.getRealCaptcha());
 			json.addProperty("base64", capchaModel.getCaptcha());
@@ -79,10 +79,10 @@ public class AuthController {
 		return json.toString();
 	}
 
-	private capchaModel generateCapcha() {
+	private CapchaModel generateCapcha() {
 
 		Captcha captcha = CaptchaUtil.createCaptcha(240, 70);
-		capchaModel capchaModel = new capchaModel();
+		CapchaModel capchaModel = new CapchaModel();
 		capchaModel.setHiddenCaptcha(captcha.getAnswer());
 
 		capchaModel.setRealCaptcha(CaptchaUtil.encodeCaptcha(captcha));
@@ -90,8 +90,8 @@ public class AuthController {
 	}
 
 	@RequestMapping(value = "/logout", method = RequestMethod.POST, produces = "application/Json")
-	public response logout(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response logout(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
 			return authService.logout(userAccount);
 		} catch (Exception e) {

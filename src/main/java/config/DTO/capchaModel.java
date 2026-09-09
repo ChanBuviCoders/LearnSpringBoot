@@ -4,7 +4,7 @@ import jakarta.persistence.Transient;
 import lombok.Data;
 
 @Data
-public class capchaModel {
+public class CapchaModel {
 	private Integer id;
 	private String name;
 	private String email;

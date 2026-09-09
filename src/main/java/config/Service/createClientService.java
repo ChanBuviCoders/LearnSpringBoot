@@ -2,15 +2,15 @@ package config.Service;
 
 import org.springframework.stereotype.Service;
 
-import config.DTO.response;
-import config.Entity.userAccount;
+import config.DTO.Response;
+import config.Entity.UserAccount;
 
 @Service
-public interface createClientService {
+public interface CreateClientService {
 
-	public response createClient(userAccount userAccount);
+	public Response createClient(UserAccount userAccount);
 
-	public response getUserGroupList();
+	public Response getUserGroupList();
 
-	public response getNavigationList(Long userGroupId);
+	public Response getNavigationList(Long userGroupId);
 }

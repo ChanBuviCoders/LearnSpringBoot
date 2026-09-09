@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Component
 @JsonInclude(Include.NON_NULL)
-public class response {
+public class Response {
 
 	private boolean Status;
 	private String Message;

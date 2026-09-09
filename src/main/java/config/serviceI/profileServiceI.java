@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.google.gson.JsonObject;
 
-import config.DAO.userAccountR;
-import config.DTO.response;
-import config.Entity.userAccount;
-import config.Service.profileService;
+import config.DAO.UserAccountR;
+import config.DTO.Response;
+import config.Entity.UserAccount;
+import config.Service.ProfileService;
 
 @Service
-public class profileServiceI implements profileService {
+public class ProfileServiceI implements ProfileService {
 
 	@Autowired
-	userAccountR userAccountR;
+	UserAccountR userAccountR;
 
 	@Override
-	public String getUserProfile(userAccount userAccount) {
+	public String getUserProfile(UserAccount userAccount) {
 		JsonObject jsonObj = new JsonObject();
 		try {
 			jsonObj.addProperty("item", userAccountR.findById(userAccount.getUserAccountId()).toString());
@@ -32,10 +32,10 @@ public class profileServiceI implements profileService {
 	}
 
 	@Override
-	public response checkCurrentPassword(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response checkCurrentPassword(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
-			userAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
+			UserAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
 			if (userAccountFr.getPassword().equals(userAccount.getPassword())) {
 				response.setStatus(true);
 				response.setMessage("Success");
@@ -53,12 +53,12 @@ public class profileServiceI implements profileService {
 	}
 
 	@Override
-	public response changePassword(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response changePassword(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
 
 			if (userAccount.getUserAccountId() != null && !userAccount.getPassword().isEmpty()) {
-				userAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
+				UserAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
 				userAccountFr.setPassword(userAccount.getPassword());
 				userAccountR.save(userAccountFr);
 				response.setStatus(true);
@@ -77,12 +77,12 @@ public class profileServiceI implements profileService {
 	}
 
 	@Override
-	public response updateUserProfile(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response updateUserProfile(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
 			if (userAccount.getUserAccountId() != null) {
 				/************** Fr -->from repository ******************/
-				userAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
+				UserAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
 				userAccountFr.setFirstName(userAccount.getFirstName());
 				userAccountFr.setLastName(userAccount.getLastName());
 				userAccountFr.setDob(userAccount.getDob());

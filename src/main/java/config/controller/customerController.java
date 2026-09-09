@@ -19,30 +19,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import config.DAO.testPageable;
+import config.DAO.TestPageable;
 import config.DTO.CustomerPaymentDTO;
 import config.DTO.PaymentInput;
-import config.DTO.response;
+import config.DTO.Response;
 import config.Entity.Payments;
-import config.Entity.customerList;
-import config.Entity.userAccount;
-import config.Service.customerService;
+import config.Entity.CustomerList;
+import config.Entity.UserAccount;
+import config.Service.CustomerService;
 
 @RestController()
 @CrossOrigin(origins = "*")
 @RequestMapping(path = "/api")
-public class customerController {
+public class CustomerController {
 
 	@Autowired
-	customerService customerS;
+	CustomerService customerS;
 
 	@Autowired
-	testPageable pagingDao;
+	TestPageable pagingDao;
 
 	/* ****************************************************************************************/
 	@RequestMapping(value = "/addCustomer", method = RequestMethod.POST, produces = "application/Json")
-	public response addCustomer(@RequestBody customerList customerList) {
-		response response = new response();
+	public Response addCustomer(@RequestBody CustomerList customerList) {
+		Response response = new Response();
 		try {
 			return customerS.addCustomer(customerList);
 		} catch (Exception e) {
@@ -53,8 +53,8 @@ public class customerController {
 	}
 
 	@RequestMapping(value = "/getCustomerDetailsById", method = RequestMethod.POST, produces = "application/Json")
-	public Optional<customerList> getCustomerDetailsById(@RequestBody customerList customerList) {
-		Optional<customerList> customerDetails = null;
+	public Optional<CustomerList> getCustomerDetailsById(@RequestBody CustomerList customerList) {
+		Optional<CustomerList> customerDetails = null;
 		try {
 			return customerDetails;
 		} catch (Exception e) {
@@ -64,8 +64,8 @@ public class customerController {
 
 	/*--------------------------------------update customer-------------------------------------*/
 	@RequestMapping(value = "/updateCustomer", method = RequestMethod.POST, produces = "application/Json")
-	public response updateCustomer(@RequestBody customerList customerList) {
-		response response = new response();
+	public Response updateCustomer(@RequestBody CustomerList customerList) {
+		Response response = new Response();
 		try {
 			return customerS.updateCustomer(customerList);
 		} catch (Exception e) {
@@ -78,8 +78,8 @@ public class customerController {
 
 	/*-------------------------------------------delete customer----------------------------------------*/
 	@RequestMapping(value = "/deleteCustomer", method = RequestMethod.POST, produces = "application/Json")
-	public response deleteCustomer(@RequestBody customerList customerList) {
-		response response = new response();
+	public Response deleteCustomer(@RequestBody CustomerList customerList) {
+		Response response = new Response();
 		try {
 			return customerS.deleteCustomerByCustomerId(customerList.getCustomerId());
 		} catch (Exception e) {
@@ -90,8 +90,8 @@ public class customerController {
 	}
 
 	@RequestMapping(value = "/getAllCustomerList", method = RequestMethod.POST, produces = "application/Json")
-	public response getAllCustomerList(@RequestBody customerList customerList) {
-		response response = new response();
+	public Response getAllCustomerList(@RequestBody CustomerList customerList) {
+		Response response = new Response();
 
 		try {
 			return customerS.getAllCustomerListByUserAccountId(customerList);
@@ -103,8 +103,8 @@ public class customerController {
 	}
 
 	@RequestMapping(value = "/getAllCustomerList1", method = RequestMethod.GET, produces = "application/Json")
-	public ResponseEntity<List<customerList>> getAllCustomerList1(Pageable pageable) {
-		Page<customerList> acList = null;
+	public ResponseEntity<List<CustomerList>> getAllCustomerList1(Pageable pageable) {
+		Page<CustomerList> acList = null;
 		try {
 			acList = pagingDao.findAll(pageable);
 			acList.getContent();
@@ -120,9 +120,9 @@ public class customerController {
 	}
 
 	@RequestMapping(value = "/getChartDetails/{userAccountId}/{type}", method = RequestMethod.POST, produces = "application/Json")
-	public response getChartDetails(@PathVariable("userAccountId") long userAccountId,
+	public Response getChartDetails(@PathVariable("userAccountId") long userAccountId,
 			@PathVariable("type") Byte type) {
-		response response = new response();
+		Response response = new Response();
 
 		try {
 			return customerS.getchartDetails(userAccountId, type);
@@ -134,8 +134,8 @@ public class customerController {
 	}
 
 	@PostMapping("/getPaymentList")
-	public response getPaymentList(@RequestBody PaymentInput pi) {
-		response response = new response();
+	public Response getPaymentList(@RequestBody PaymentInput pi) {
+		Response response = new Response();
 		try {
 			return customerS.getPaymentList(pi);
 		} catch (Exception e) {
@@ -146,8 +146,8 @@ public class customerController {
 	}
 
 	@PostMapping("/changePaymentStatus")
-	public response changePaymentStatus(@RequestBody CustomerPaymentDTO cpd) {
-		response response = new response();
+	public Response changePaymentStatus(@RequestBody CustomerPaymentDTO cpd) {
+		Response response = new Response();
 		try {
 			return customerS.changePaymentStatus(cpd);
 		} catch (Exception e) {
@@ -158,8 +158,8 @@ public class customerController {
 	}
 
 	@GetMapping("/getPaymentListByCustomerId/{customerId}")
-	public response getPaymentListByCustomerId(@PathVariable("customerId") Long customerId) {
-		response response = new response();
+	public Response getPaymentListByCustomerId(@PathVariable("customerId") Long customerId) {
+		Response response = new Response();
 		try {
 			return customerS.getPaymentListByCustomerId(customerId);
 		} catch (Exception e) {

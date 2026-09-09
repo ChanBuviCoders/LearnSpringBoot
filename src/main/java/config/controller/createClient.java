@@ -9,23 +9,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import config.DTO.response;
-import config.Entity.userAccount;
-import config.Service.createClientService;
+import config.DTO.Response;
+import config.Entity.UserAccount;
+import config.Service.CreateClientService;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api")
-public class createClient {
+public class CreateClient {
 
 	@Autowired
-	createClientService ClientService;
+	CreateClientService clientService;
 
 	@GetMapping(path = "/getUsergroupList")
-	public response getUsergroupList() {
-		response response = new response();
+	public Response getUsergroupList() {
+		Response response = new Response();
 		try {
-			return ClientService.getUserGroupList();
+			return clientService.getUserGroupList();
 		} catch (Exception e) {
 			response.setStatus(false);
 			response.setMessage("somthing went wrong");
@@ -34,10 +34,10 @@ public class createClient {
 	}
 
 	@GetMapping(path = "/getNavigationMenu/{userGroupId}")
-	public response getNavigetNavigationMenugationMenu(@PathVariable Long userGroupId) {
-		response response = new response();
+	public Response getNavigetNavigationMenugationMenu(@PathVariable Long userGroupId) {
+		Response response = new Response();
 		try {
-			return ClientService.getNavigationList(userGroupId);
+			return clientService.getNavigationList(userGroupId);
 		} catch (Exception e) {
 			response.setStatus(false);
 			response.setMessage("somthing went wrong");
@@ -46,10 +46,10 @@ public class createClient {
 	}
 
 	@RequestMapping(value = "/createUser", method = RequestMethod.POST, produces = "application/json")
-	public response createUser(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response createUser(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
-			return ClientService.createClient(userAccount);
+			return clientService.createClient(userAccount);
 		} catch (Exception e) {
 			response.setStatus(false);
 			response.setMessage("somthing went wrong");

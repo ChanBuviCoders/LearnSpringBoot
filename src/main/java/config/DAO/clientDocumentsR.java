@@ -5,11 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import config.Entity.clientDocuments;
+import config.Entity.ClientDocuments;
 
 @Repository
-public interface clientDocumentsR extends JpaRepository<clientDocuments, Long> {
+public interface ClientDocumentsR extends JpaRepository<ClientDocuments, Long> {
 
-	List<clientDocuments> findAllByUserAccountId(long userAccountId);
+	List<ClientDocuments> findAllByUserAccountId(long userAccountId);
 
 }

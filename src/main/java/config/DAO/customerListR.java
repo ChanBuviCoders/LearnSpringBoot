@@ -9,18 +9,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import config.Entity.customerList;
+import config.Entity.CustomerList;
 
 @Repository
-public interface customerListR extends JpaRepository<customerList, Long> {
+public interface CustomerListR extends JpaRepository<CustomerList, Long> {
 
-	List<customerList> findAllByUserAccountId(Long userAccountId);
+	List<CustomerList> findAllByUserAccountId(Long userAccountId);
 
-	List<customerList> findAllByMobileNumber(Long mobileNumber);
+	List<CustomerList> findAllByMobileNumber(Long mobileNumber);
 
-	List<customerList> findAllByUserAccountIdAndLoanType(long userAccountId, String loanType);
+	List<CustomerList> findAllByUserAccountIdAndLoanType(long userAccountId, String loanType);
 
-	List<customerList> findByLoanType(String loanType);
+	List<CustomerList> findByLoanType(String loanType);
 
 	@Query(value = "select distinct (loanType) from customerList where userAccountId=:userAccountId  ", nativeQuery = true)
 	public List<String> findDistinctLoanTypeByUserAccountId(@Param("userAccountId") Long UserAccountId);
@@ -39,11 +39,11 @@ public interface customerListR extends JpaRepository<customerList, Long> {
 	public Long getSumOfLoanAmountByLoanType(@Param("month") String month, @Param("loanType") String loanType,
 			@Param("userAccountId") long userAccountId);
 
-	customerList findByCustomerId(long customerId);
+	CustomerList findByCustomerId(long customerId);
 
-	List<customerList> findByLoanTypeAndUserAccountId(String loanType, Long userAccountId);
+	List<CustomerList> findByLoanTypeAndUserAccountId(String loanType, Long userAccountId);
 
-	List<customerList> findByLoanTypeAndStartDateLessThanEqualAndUserAccountId(String loanType, Date date,
+	List<CustomerList> findByLoanTypeAndStartDateLessThanEqualAndUserAccountId(String loanType, Date date,
 			Long userAccountId);
 
 }

@@ -2,8 +2,8 @@ package config.DAO;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import config.Entity.userGroup;
+import config.Entity.UserGroup;
 
-public interface userGroupR extends JpaRepository<userGroup, Long> {
+public interface UserGroupR extends JpaRepository<UserGroup, Long> {
 
 }

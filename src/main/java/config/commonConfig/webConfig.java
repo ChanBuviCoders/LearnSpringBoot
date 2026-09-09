@@ -1,21 +1,21 @@
 package config.commonConfig;
 
-import config.commonConfig.interceptors.jwtInterceptors;
+import config.commonConfig.interceptors.JwtInterceptors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-public class webConfig implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
 
-	public webConfig() {
+	public WebConfig() {
 		System.out.println(
 				"*******************************************************YOU CAN DO IT CHANDRAN SUBRAMANI*************************************************************");
 	}
 
 	@Autowired
-	jwtInterceptors jwtInterceptors;
+	JwtInterceptors jwtInterceptors;
 
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {

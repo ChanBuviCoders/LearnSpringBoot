@@ -16,24 +16,24 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import config.DAO.clientDocumentsR;
-import config.DTO.response;
-import config.Entity.clientDocuments;
-import config.Service.clientDocumentS;
+import config.DAO.ClientDocumentsR;
+import config.DTO.Response;
+import config.Entity.ClientDocuments;
+import config.Service.ClientDocumentS;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Service
-public class clientDocumentI implements clientDocumentS {
+public class ClientDocumentI implements ClientDocumentS {
 
 	@Autowired
-	clientDocumentsR clientDocumentsR;
+	ClientDocumentsR clientDocumentsR;
 
 	String apiFilePath = "C:\\Users\\murug\\projects\\LearnSpringBoot-main\\documents\\apiDocuments";
 
 	@Override
-	public response uploadImage(List<MultipartFile> multipartFiles, String uploadedBy, long userAccountId) {
-		response response = new response();
+	public Response uploadImage(List<MultipartFile> multipartFiles, String uploadedBy, long userAccountId) {
+		Response response = new Response();
 		try {
 
 			String dPath = apiFilePath.concat("\\" + uploadedBy);// dPath--->Directory path
@@ -51,7 +51,7 @@ public class clientDocumentI implements clientDocumentS {
 				String filePath = dPath + File.separator + filename;
 				File ifExist = new File(filePath);
 				if (!ifExist.exists()) {
-					clientDocuments fub = new clientDocuments();
+					ClientDocuments fub = new ClientDocuments();
 					fub.setFileName(file.getOriginalFilename()); // file upload bean
 					fub.setFileType(file.getContentType());
 					fub.setFileSize(String.valueOf(file.getSize()));
@@ -89,9 +89,9 @@ public class clientDocumentI implements clientDocumentS {
 
 	/*-------------------------get uploaded file details-------------------------------*/
 	@Override
-	public response getUploadedFileDetails(@RequestBody long userAccountId) {
-		response response = new response();
-		List<clientDocuments> fub = null;
+	public Response getUploadedFileDetails(@RequestBody long userAccountId) {
+		Response response = new Response();
+		List<ClientDocuments> fub = null;
 		try {
 			fub = clientDocumentsR.findAllByUserAccountId(userAccountId);
 			response.setData(fub);
@@ -107,8 +107,8 @@ public class clientDocumentI implements clientDocumentS {
 
 	/*---------------------------get uploaded file details-------------------------------*/
 	@Override
-	public response deleteFileDetails(clientDocuments clientDocuments) {
-		response response = new response();
+	public Response deleteFileDetails(ClientDocuments clientDocuments) {
+		Response response = new Response();
 		try {
 			clientDocumentsR.deleteById(clientDocuments.getFileId());
 			File file = new File(clientDocuments.getFilePath() + "\\" + clientDocuments.getFileName());

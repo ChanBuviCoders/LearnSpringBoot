@@ -13,28 +13,28 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import config.DAO.userAccountR;
-import config.DTO.response;
-import config.Entity.clientDocuments;
-import config.Service.clientDocumentS;
+import config.DAO.UserAccountR;
+import config.DTO.Response;
+import config.Entity.ClientDocuments;
+import config.Service.ClientDocumentS;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @CrossOrigin(origins = "*")
 @RestController()
 @RequestMapping(path = "/api")
-public class clientDocumentsController {
+public class ClientDocumentsController {
 
 	@Autowired
-	userAccountR userAccountR;
+	UserAccountR userAccountR;
 
 	@Autowired
-	clientDocumentS clientDocumentS;
+	ClientDocumentS clientDocumentS;
 
 	@RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = "application/Json")
-	public response uploadImage(@RequestParam("file") List<MultipartFile> multipartFiles,
+	public Response uploadImage(@RequestParam("file") List<MultipartFile> multipartFiles,
 			@RequestParam("uploadedBy") String uploadedBy, @RequestParam("userAccountId") long userAccountId) {
-		response response = new response();
+		Response response = new Response();
 		try {
 			return clientDocumentS.uploadImage(multipartFiles, uploadedBy, userAccountId);
 		} catch (Exception e) {
@@ -47,8 +47,8 @@ public class clientDocumentsController {
 
 //	----------------------------------------get uploaded file details-------------------------------
 	@RequestMapping(value = "/getUploadedFileDetails", method = RequestMethod.POST, produces = "application/Json")
-	public response getUploadedFileDetails(@RequestBody long userAccountId) {
-		response response = new response();
+	public Response getUploadedFileDetails(@RequestBody long userAccountId) {
+		Response response = new Response();
 		try {
 			return clientDocumentS.getUploadedFileDetails(userAccountId);
 		} catch (Exception e) {
@@ -61,8 +61,8 @@ public class clientDocumentsController {
 
 //	----------------------------------------get uploaded file details-------------------------------
 	@RequestMapping(value = "/deleteFileDetails", method = RequestMethod.POST, produces = "application/Json")
-	public response deleteFileDetails(@RequestBody clientDocuments clientDocuments) {
-		response response = new response();
+	public Response deleteFileDetails(@RequestBody ClientDocuments clientDocuments) {
+		Response response = new Response();
 		try {
 			return clientDocumentS.deleteFileDetails(clientDocuments);
 		} catch (Exception e) {

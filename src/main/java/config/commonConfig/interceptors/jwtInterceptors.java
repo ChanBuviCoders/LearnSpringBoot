@@ -1,6 +1,5 @@
 package config.commonConfig.interceptors;
 
-import java.net.http.HttpResponse;
 import java.util.Arrays;
 
 import org.apache.http.HttpStatus;
@@ -9,19 +8,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.WebRequestInterceptor;
 import org.springframework.web.servlet.handler.WebRequestHandlerInterceptorAdapter;
 
-import config.commonConfig.jsonWebToken;
+import config.commonConfig.JsonWebToken;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class jwtInterceptors extends WebRequestHandlerInterceptorAdapter {
+public class JwtInterceptors extends WebRequestHandlerInterceptorAdapter {
 
-	public jwtInterceptors(WebRequestInterceptor requestInterceptor) {
+	public JwtInterceptors(WebRequestInterceptor requestInterceptor) {
 		super(requestInterceptor);
 	}
 
 	@Autowired
-	jsonWebToken jwtService;
+	JsonWebToken jwtService;
 
 	private static String[] pubicApis = { "getCapcha", "authSession" };
 

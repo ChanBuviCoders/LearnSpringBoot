@@ -27,5 +27,5 @@ public class Payments {
 	
 	@ManyToOne
 	@JoinColumn(name="customerId",insertable = false,updatable = false)
-	private customerList customerList;
+	private CustomerList customerList;
 }

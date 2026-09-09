@@ -2,10 +2,10 @@ package config.serviceI;
 
 import org.springframework.stereotype.Service;
 
-import config.DTO.response;
-import config.Entity.userAccount;
+import config.DTO.Response;
+import config.Entity.UserAccount;
 
 @Service
 public interface MultipleInhertanceTest {
-	public response authSession(userAccount userAccount);
+	public Response authSession(UserAccount userAccount);
 }

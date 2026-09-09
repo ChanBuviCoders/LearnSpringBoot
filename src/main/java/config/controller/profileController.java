@@ -7,20 +7,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import config.DTO.response;
-import config.Entity.userAccount;
-import config.Service.profileService;
+import config.DTO.Response;
+import config.Entity.UserAccount;
+import config.Service.ProfileService;
 
 @CrossOrigin(origins = "*")
 @RestController()
 @RequestMapping(path = "/api")
-public class profileController {
+public class ProfileController {
 
 	@Autowired
-	profileService profileS;
+	ProfileService profileS;
 
 	@RequestMapping(value = "/getUserProfile", method = RequestMethod.POST, produces = "application/json")
-	public String getUserProfile(userAccount userAccount) {
+	public String getUserProfile(UserAccount userAccount) {
 		try {
 			return profileS.getUserProfile(userAccount);
 		} catch (Exception e) {
@@ -30,8 +30,8 @@ public class profileController {
 	}
 
 	@RequestMapping(value = "/checkCurrentPassword", method = RequestMethod.POST, produces = "application/Json")
-	public response checkCurrentPassword(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response checkCurrentPassword(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
 			return profileS.checkCurrentPassword(userAccount);
 		} catch (Exception e) {
@@ -42,8 +42,8 @@ public class profileController {
 	}
 
 	@RequestMapping(value = "/changePassword", method = RequestMethod.POST, produces = "application/Json")
-	public response changePassword(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response changePassword(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
 			return profileS.changePassword(userAccount);
 		} catch (Exception e) {
@@ -54,8 +54,8 @@ public class profileController {
 	}
 
 	@RequestMapping(value = "/updateUserProfile", method = RequestMethod.POST, produces = "application/Json")
-	public response updateUserProfile(@RequestBody userAccount userAccount) {
-		response response = new response();
+	public Response updateUserProfile(@RequestBody UserAccount userAccount) {
+		Response response = new Response();
 		try {
 			return profileS.updateUserProfile(userAccount);
 		} catch (Exception e) {

@@ -5,17 +5,17 @@ import java.sql.Date;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 
-import config.Entity.userAccount;
+import config.Entity.UserAccount;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
-public class jsonWebToken {
+public class JsonWebToken {
 	private static String secretKey = "this is secretkey";
 
-	public String generateToken(userAccount userAccount) {
+	public String generateToken(UserAccount userAccount) {
 
 		Claims claims = Jwts.claims().setIssuer(String.valueOf(userAccount.getUserName()))
 				.setIssuedAt(new Date(System.currentTimeMillis()))

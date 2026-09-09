@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class dbConnection {
+public class DbConnection {
 
 	String s1 = "Welcome";
 	String s2 = "Welcome";

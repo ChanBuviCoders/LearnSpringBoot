@@ -3,9 +3,9 @@ package config.DAO;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
-import config.Entity.customerList;
+import config.Entity.CustomerList;
 
 @Repository
-public interface testPageable extends PagingAndSortingRepository<customerList, Long> {
+public interface TestPageable extends PagingAndSortingRepository<CustomerList, Long> {
 
 }

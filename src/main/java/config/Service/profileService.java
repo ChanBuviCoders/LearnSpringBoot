@@ -2,18 +2,18 @@ package config.Service;
 
 import org.springframework.stereotype.Service;
 
-import config.DTO.response;
-import config.Entity.userAccount;
+import config.DTO.Response;
+import config.Entity.UserAccount;
 
 @Service
-public interface profileService {
+public interface ProfileService {
 
-	String getUserProfile(userAccount userAccount);
+	String getUserProfile(UserAccount userAccount);
 
-	response updateUserProfile(userAccount userAccount);
+	Response updateUserProfile(UserAccount userAccount);
 
-	response changePassword(userAccount userAccount);
+	Response changePassword(UserAccount userAccount);
 
-	response checkCurrentPassword(userAccount userAccount);
+	Response checkCurrentPassword(UserAccount userAccount);
 
 }

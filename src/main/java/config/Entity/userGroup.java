@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class userGroup {
+public class UserGroup {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

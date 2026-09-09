@@ -15,26 +15,26 @@ import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import config.DAO.userAccountR;
-import config.DTO.response;
-import config.Entity.userAccount;
-import config.Service.authService;
-import config.commonConfig.jsonWebToken;
+import config.DAO.UserAccountR;
+import config.DTO.Response;
+import config.Entity.UserAccount;
+import config.Service.AuthService;
+import config.commonConfig.JsonWebToken;
 
 @Service
-public class authServiceI implements authService {
+public class AuthServiceI implements AuthService {
 
 	@Autowired
-	userAccountR userAccountR;
+	UserAccountR userAccountR;
 
 	@Autowired
-	jsonWebToken jwtService;
+	JsonWebToken jwtService;
 
 	@Override
-	public response authSession(userAccount userAccount) {
-		response response = new response();
+	public Response authSession(UserAccount userAccount) {
+		Response response = new Response();
 		try {
-			userAccount ua = userAccountR.findByUserName(userAccount.getUserName());
+			UserAccount ua = userAccountR.findByUserName(userAccount.getUserName());
 			if (ua != null) {
 				if (ua.getLoginAttempt() < 3) {
 					if (ua.getPassword().equals(userAccount.getPassword())) {
@@ -93,8 +93,8 @@ public class authServiceI implements authService {
 	}
 
 	@Override
-	public response getSession(String jwtToken) {
-		response response = new response();
+	public Response getSession(String jwtToken) {
+		Response response = new Response();
 		try {
 			String[] parts = jwtToken.split("\\.");
 			Base64.Decoder decoder = Base64.getUrlDecoder();
@@ -111,12 +111,12 @@ public class authServiceI implements authService {
 		}
 	}
 
-	public response getTokenUser(Long userAccountId, String jwtToken) {
-		response response = new response();
+	public Response getTokenUser(Long userAccountId, String jwtToken) {
+		Response response = new Response();
 
 		try {
 			if (userAccountId != null) {
-				userAccount cudb = userAccountR.findByUserAccountId(userAccountId);
+				UserAccount cudb = userAccountR.findByUserAccountId(userAccountId);
 				cudb.setPanImagePath(fileToBase64(cudb.getPanImagePath()));
 				cudb.setAdharImagePath(fileToBase64(cudb.getAdharImagePath()));
 				response.setStatus(true);
@@ -144,11 +144,11 @@ public class authServiceI implements authService {
 	}
 
 	@Override
-	public response logout(userAccount userAccount) {
-		response response = new response();
+	public Response logout(UserAccount userAccount) {
+		Response response = new Response();
 
 		try {
-			userAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
+			UserAccount userAccountFr = userAccountR.findByUserAccountId(userAccount.getUserAccountId());
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			String fDate = formatter.format(date);

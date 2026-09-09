@@ -3,7 +3,7 @@ package config.DTO;
 import lombok.Data;
 
 @Data
-public class checkCurrentPwd {
+public class CheckCurrentPwd {
 
 	private long userAccountId;
 	private String password;

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class navigationMenuDTO {
+public class NavigationMenuDTO {
 
 	private Long menuId;
 	private String menuName;

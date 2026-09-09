@@ -2,15 +2,15 @@ package config.Service;
 
 import org.springframework.stereotype.Service;
 
-import config.DTO.response;
-import config.Entity.userAccount;
+import config.DTO.Response;
+import config.Entity.UserAccount;
 
 @Service
-public interface authService {
+public interface AuthService {
 
-	public response authSession(userAccount userAccount);
+	public Response authSession(UserAccount userAccount);
 
-	public response getSession(String jwtToken);
+	public Response getSession(String jwtToken);
 
-	public response logout(userAccount userAccount);
+	public Response logout(UserAccount userAccount);
 }

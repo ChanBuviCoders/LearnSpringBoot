@@ -14,16 +14,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.JsonObject;
 
-import config.DAO.userAccountR;
-import config.Entity.userAccount;
+import config.DAO.UserAccountR;
+import config.Entity.UserAccount;
 
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api") // for nested api
-public class userController {
+public class UserController {
 
 	@Autowired
-	userAccountR userAccountR;
+	UserAccountR userAccountR;
 
 	@RequestMapping(value = "/rgbToHexColor", method = RequestMethod.POST, produces = "application/Json")
 	public String rgbToHexColor(@RequestBody int rgbArray[]) {
@@ -130,9 +130,9 @@ public class userController {
 	}
 
 	@RequestMapping(value = "/getAllUser", method = RequestMethod.GET, produces = "application/json")
-	public List<userAccount> getAllUser() {
+	public List<UserAccount> getAllUser() {
 
-		List<userAccount> list = (List<userAccount>) userAccountR.findAll();
+		List<UserAccount> list = (List<UserAccount>) userAccountR.findAll();
 		return list;
 
 	}

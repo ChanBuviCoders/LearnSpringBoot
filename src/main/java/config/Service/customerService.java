@@ -7,28 +7,28 @@ import org.springframework.stereotype.Service;
 
 import config.DTO.CustomerPaymentDTO;
 import config.DTO.PaymentInput;
-import config.DTO.response;
-import config.Entity.customerList;
+import config.DTO.Response;
+import config.Entity.CustomerList;
 
 @Service
-public interface customerService {
+public interface CustomerService {
 
-	response addCustomer(customerList customerList);
+	Response addCustomer(CustomerList customerList);
 
-	response getchartDetails(Long userAccountId, Byte type);
+	Response getchartDetails(Long userAccountId, Byte type);
 
-	response getAllCustomerListByUserAccountId(customerList customerList);
+	Response getAllCustomerListByUserAccountId(CustomerList customerList);
 
-	response deleteCustomerByCustomerId(long customerId);
+	Response deleteCustomerByCustomerId(long customerId);
 
-	response updateCustomer(customerList customerList);
+	Response updateCustomer(CustomerList customerList);
 
 	ResponseEntity<String> sendSmsToMobileNumber() throws ParseException;
 
-	response getPaymentList(PaymentInput pi);
+	Response getPaymentList(PaymentInput pi);
 
-	response changePaymentStatus(CustomerPaymentDTO cpd);
+	Response changePaymentStatus(CustomerPaymentDTO cpd);
 
-	response getPaymentListByCustomerId(Long customerId);
+	Response getPaymentListByCustomerId(Long customerId);
 
 }

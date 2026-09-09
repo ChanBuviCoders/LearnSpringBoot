@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class navigationMenu {
+public class NavigationMenu {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long menuId;

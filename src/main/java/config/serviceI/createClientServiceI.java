@@ -11,32 +11,32 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import config.DAO.navigationR;
-import config.DAO.userAccountR;
-import config.DAO.userGroupR;
-import config.DTO.navigationMenuDTO;
-import config.DTO.response;
-import config.Entity.userAccount;
-import config.Entity.userGroup;
-import config.Service.createClientService;
+import config.DAO.NavigationR;
+import config.DAO.UserAccountR;
+import config.DAO.UserGroupR;
+import config.DTO.NavigationMenuDTO;
+import config.DTO.Response;
+import config.Entity.UserAccount;
+import config.Entity.UserGroup;
+import config.Service.CreateClientService;
 
 @Service
-public class createClientServiceI implements createClientService {
+public class CreateClientServiceI implements CreateClientService {
 
 	@Autowired
-	userAccountR userAccountR;
+	UserAccountR userAccountR;
 	@Autowired
-	userGroupR userGroupR;
+	UserGroupR userGroupR;
 	@Autowired
-	navigationR navigationR;
+	NavigationR navigationR;
 
 	@SuppressWarnings("unused")
 	@Override
-	public response createClient(userAccount userAccount) {
-		response response = new response();
+	public Response createClient(UserAccount userAccount) {
+		Response response = new Response();
 		try {
 
-			userAccount uA = userAccountR.getUserAccountByUserName(userAccount.getUserName());
+			UserAccount uA = userAccountR.getUserAccountByUserName(userAccount.getUserName());
 			if (uA == null) {
 				if (userAccount != null) {
 					userAccount.setAdharImagePath(
@@ -100,11 +100,11 @@ public class createClientServiceI implements createClientService {
 	}
 
 	@Override
-	public response getUserGroupList() {
-		response response = new response();
-		List<userGroup> userGroup = null;
+	public Response getUserGroupList() {
+		Response response = new Response();
+		List<UserGroup> userGroup = null;
 		try {
-			userGroup = (List<userGroup>) userGroupR.findAll();
+			userGroup = (List<UserGroup>) userGroupR.findAll();
 			response.setData(userGroup);
 			response.setStatus(true);
 			response.setMessage("Success");
@@ -117,12 +117,12 @@ public class createClientServiceI implements createClientService {
 	}
 
 	@Override
-	public response getNavigationList(Long userGroupId) {
-		List<navigationMenuDTO> navigationMenuList = null;
-		response response = new response();
+	public Response getNavigationList(Long userGroupId) {
+		List<NavigationMenuDTO> navigationMenuList = null;
+		Response response = new Response();
 		try {
 			navigationMenuList = navigationR.getNavigationMenuByUserGroupId(userGroupId).stream()
-					.map(menu -> new navigationMenuDTO(  (Long) menu[0], 
+					.map(menu -> new NavigationMenuDTO(  (Long) menu[0], 
 					        (String) menu[1], 
 					        (Boolean) menu[2], 
 					        (Boolean) menu[3], 
