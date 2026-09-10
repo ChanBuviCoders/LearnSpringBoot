@@ -2,6 +2,7 @@ package config.serviceI;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,8 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Date;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+import com.google.gson.JsonParser;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -99,9 +100,12 @@ public class AuthServiceI implements AuthService {
 			String[] parts = jwtToken.split("\\.");
 			Base64.Decoder decoder = Base64.getUrlDecoder();
 			String payload = new String(decoder.decode(parts[1]));
-			JSONParser parser = new JSONParser();
-			JSONObject json = (JSONObject) parser.parse(payload.toString());
-			return getTokenUser((Long) json.get("userAccountId"), jwtToken);
+
+			// Parse JSON payload using Gson JsonParser
+			com.google.gson.JsonObject jsonObject = com.google.gson.JsonParser.parseString(payload).getAsJsonObject();
+			Long userAccountId = jsonObject.get("userAccountId").getAsLong();
+
+			return getTokenUser(userAccountId, jwtToken);
 
 		} catch (Exception e) {
 			response.setStatus(false);
@@ -117,8 +121,6 @@ public class AuthServiceI implements AuthService {
 		try {
 			if (userAccountId != null) {
 				UserAccount cudb = userAccountR.findByUserAccountId(userAccountId);
-				cudb.setPanImagePath(fileToBase64(cudb.getPanImagePath()));
-				cudb.setAdharImagePath(fileToBase64(cudb.getAdharImagePath()));
 				response.setStatus(true);
 				response.setMessage("success");
 				response.setData(cudb);
@@ -137,10 +139,14 @@ public class AuthServiceI implements AuthService {
 		}
 	}
 
-	public String fileToBase64(String filepath) throws IOException {
-		byte[] byteData = Files.readAllBytes(Paths.get(filepath));
-		String base64String = Base64.getEncoder().encodeToString(byteData);
-		return base64String;
+	public String fileToBase64(String filePath) throws IOException {
+		Path path = Paths.get(filePath);
+
+		if (!Files.exists(path) || !Files.isRegularFile(path)) {
+			return null;
+		}
+
+		return Base64.getEncoder().encodeToString(Files.readAllBytes(path));
 	}
 
 	@Override

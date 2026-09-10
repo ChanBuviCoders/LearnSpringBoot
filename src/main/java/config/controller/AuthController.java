@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.JsonObject;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import cn.apiclub.captcha.Captcha;
 import config.Capcha.CaptchaUtil;
@@ -64,17 +66,23 @@ public class AuthController {
 	/**************************** Generate Capcha ********************************/
 	@RequestMapping(value = "/getCapcha", method = RequestMethod.POST, produces = "application/Json")
 	public String getCapcha() {
-		JsonObject json = new JsonObject();
 		try {
 			CapchaModel capchaModel = generateCapcha();
-			json.addProperty("value", capchaModel.getHiddenCaptcha());
-			json.addProperty("image", capchaModel.getRealCaptcha());
-			json.addProperty("base64", capchaModel.getCaptcha());
+			Map<String, Object> json = new LinkedHashMap<>();
+			json.put("value", capchaModel.getHiddenCaptcha());
+			json.put("image", capchaModel.getRealCaptcha());
+			json.put("base64", capchaModel.getCaptcha());
+			ObjectMapper mapper = new ObjectMapper();
+			return mapper.writeValueAsString(json);
 		} catch (Exception e) {
-			System.out.println(e);
+			Map<String, Object> error = new LinkedHashMap<>();
+			error.put("error", "Captcha generation failed");
+			try {
+				return new ObjectMapper().writeValueAsString(error);
+			} catch (Exception ex) {
+				return "{\"error\":\"Captcha generation failed\"}";
+			}
 		}
-
-		return json.toString();
 	}
 
 	private CapchaModel generateCapcha() {

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.JsonObject;
-
 import config.DAO.UserAccountR;
 import config.Entity.UserAccount;
 
@@ -27,7 +25,6 @@ public class UserController {
 	public String rgbToHexColor(@RequestBody int rgbArray[]) {
 		String hexArray[] = new String[3];
 		StringBuffer SB = new StringBuffer();
-		JsonObject json = new JsonObject();
 		try {
 			char[] charArry = { 'A', 'B', 'C', 'D', 'E', 'F' };
 
@@ -81,18 +78,17 @@ public class UserController {
 							String remain = String.valueOf(charArry[(remainder == 0 ? 5 : (remainder - 1))]);
 							value = quo.concat(remain);
 						}
-					}
-
-					hexArray[i] = value;
-					SB.append(value);
 				}
-				json.addProperty("hexValue", SB.toString());
+
+				hexArray[i] = value;
+				SB.append(value);
 			}
+		}
 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
-		return json.toString();
+		return SB.toString();
 	}
 
 	public String getMonthName(byte number) {

@@ -18,16 +18,18 @@ import config.Entity.ClientDocuments;
 import config.Service.ClientDocumentS;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RestController()
 @RequestMapping(path = "/api")
+@RequiredArgsConstructor
 public class ClientDocumentsController {
 
 	@Autowired
 	UserAccountR userAccountR;
 
-	@Autowired
-	ClientDocumentS clientDocumentS;
+
+	private final ClientDocumentS clientDocumentS;
 
 	@RequestMapping(value = "/uploadImage", method = RequestMethod.POST, produces = "application/Json")
 	public Response uploadImage(@RequestParam("file") List<MultipartFile> multipartFiles,

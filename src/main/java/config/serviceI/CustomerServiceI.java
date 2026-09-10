@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -195,7 +196,11 @@ public class CustomerServiceI implements CustomerService {
 
 			String monthLists[] = customerListR.getMonthLists(userAccountId);
 
-			json.put("chartLabels", monthLists);
+			JSONArray ja = new JSONArray();
+			for (String month : monthLists) {
+				ja.add(month);
+			}
+			json.put("chartLabels", ja);
 
 			response.setStatus(true);
 			response.setData(json);

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import config.DAO.NavigationR;
 import config.DAO.UserAccountR;
@@ -19,8 +20,11 @@ import config.DTO.Response;
 import config.Entity.UserAccount;
 import config.Entity.UserGroup;
 import config.Service.CreateClientService;
+import config.Service.StorageService;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class CreateClientServiceI implements CreateClientService {
 
 	@Autowired
@@ -30,19 +34,19 @@ public class CreateClientServiceI implements CreateClientService {
 	@Autowired
 	NavigationR navigationR;
 
+	private final StorageService storageService;
+
 	@SuppressWarnings("unused")
 	@Override
-	public Response createClient(UserAccount userAccount) {
+	public Response createClient(MultipartFile adharFile, MultipartFile panFile, UserAccount userAccount) {
 		Response response = new Response();
 		try {
 
 			UserAccount uA = userAccountR.getUserAccountByUserName(userAccount.getUserName());
 			if (uA == null) {
 				if (userAccount != null) {
-					userAccount.setAdharImagePath(
-							base64ToFile(userAccount.getAdharImagePath(), userAccount.getMobileNumber(), "adharImage"));
-					userAccount.setPanImagePath(
-							base64ToFile(userAccount.getPanImagePath(), userAccount.getMobileNumber(), "panImage"));
+					userAccount.setAdharImagePath(storageService.uploadFile(adharFile));
+					userAccount.setPanImagePath(storageService.uploadFile(panFile));
 					userAccount.setLoginAttempt(0);
 					userAccountR.save(userAccount);
 					response.setStatus(true);
@@ -122,11 +126,8 @@ public class CreateClientServiceI implements CreateClientService {
 		Response response = new Response();
 		try {
 			navigationMenuList = navigationR.getNavigationMenuByUserGroupId(userGroupId).stream()
-					.map(menu -> new NavigationMenuDTO(  (Long) menu[0], 
-					        (String) menu[1], 
-					        (Boolean) menu[2], 
-					        (Boolean) menu[3], 
-					        (Boolean) menu[4]))
+					.map(menu -> new NavigationMenuDTO((Long) menu[0], (String) menu[1], (Boolean) menu[2],
+							(Boolean) menu[3], (Boolean) menu[4]))
 					.collect(Collectors.toList());
 			response.setData(navigationMenuList);
 			response.setStatus(true);
