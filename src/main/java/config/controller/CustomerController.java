@@ -9,8 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +21,10 @@ import config.DAO.TestPageable;
 import config.DTO.CustomerPaymentDTO;
 import config.DTO.PaymentInput;
 import config.DTO.Response;
-import config.Entity.Payments;
 import config.Entity.CustomerList;
-import config.Entity.UserAccount;
 import config.Service.CustomerService;
 
 @RestController()
-@CrossOrigin(origins = "*")
 @RequestMapping(path = "/api")
 public class CustomerController {
 

@@ -6,7 +6,6 @@ import java.util.Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +16,6 @@ import com.google.gson.JsonObject;
 import config.DAO.UserAccountR;
 import config.Entity.UserAccount;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(path = "/api") // for nested api
 public class UserController {
