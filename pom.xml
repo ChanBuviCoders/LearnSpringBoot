@@ -13,12 +13,12 @@
 	</parent>
 
 	<groupId>com.example</groupId>
-	<artifactId>springCurd</artifactId>
+	<artifactId>springCrud</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>springCurd</name>
-	<description>Spring Boot CRUD Application</description>
+	<name>springCrud</name>
+	<description>Spring Boot CRUD Application with Security</description>
 
 	<properties>
 		<java.version>17</java.version>

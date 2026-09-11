@@ -38,8 +38,10 @@
     <logger name="config.commonConfig" level="INFO"/>
     <logger name="config.controller" level="DEBUG"/>
     <logger name="config.Service" level="DEBUG"/>
+    <logger name="config.serviceI" level="DEBUG"/>
+    <logger name="config.security" level="DEBUG"/>
     <logger name="org.springframework" level="INFO"/>
-    <logger name="org.springframework.security" level="DEBUG"/>
+    <logger name="org.springframework.security" level="INFO"/>
     <logger name="org.hibernate" level="WARN"/>
 
     <!-- Root Logger -->

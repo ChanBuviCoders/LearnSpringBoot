@@ -3,17 +3,18 @@ package config.Service;
 import java.text.ParseException;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 import config.DTO.CustomerPaymentDTO;
 import config.DTO.PaymentInput;
 import config.DTO.Response;
 import config.Entity.CustomerList;
+import config.Entity.Payments;
 
-@Service
 public interface CustomerService {
 
 	Response addCustomer(CustomerList customerList);
+
+	Response getCustomerDetailsById(Long customerId);
 
 	Response getchartDetails(Long userAccountId, Byte type);
 
@@ -31,4 +32,9 @@ public interface CustomerService {
 
 	Response getPaymentListByCustomerId(Long customerId);
 
+	Response getPaymentById(Long paymentId);
+
+	Response deletePayment(Long paymentId);
+
+	Response updatePayment(Payments payment);
 }
