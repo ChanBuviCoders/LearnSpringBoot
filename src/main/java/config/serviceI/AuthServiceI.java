@@ -8,28 +8,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.Date;
 
-import com.google.gson.JsonParser;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.azure.storage.blob.sas.BlobSasPermission;
+import com.azure.storage.blob.sas.BlobServiceSasSignatureValues;
 
 import config.DAO.UserAccountR;
 import config.DTO.Response;
 import config.Entity.UserAccount;
 import config.Service.AuthService;
+import config.Service.AzureBlobService;
 import config.commonConfig.JsonWebToken;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class AuthServiceI implements AuthService {
 
-	@Autowired
-	UserAccountR userAccountR;
-
-	@Autowired
-	JsonWebToken jwtService;
+	private final UserAccountR userAccountR;
+	private final JsonWebToken jwtService;
+	private final AzureBlobService azureBlobService;
 
 	@Override
 	public Response authSession(UserAccount userAccount) {
@@ -121,6 +124,8 @@ public class AuthServiceI implements AuthService {
 		try {
 			if (userAccountId != null) {
 				UserAccount cudb = userAccountR.findByUserAccountId(userAccountId);
+				cudb.setPanImagePath(azureBlobService.generateReadToken(cudb.getPanImagePath()));
+				cudb.setAdharImagePath(azureBlobService.generateReadToken(cudb.getAdharImagePath()));
 				response.setStatus(true);
 				response.setMessage("success");
 				response.setData(cudb);

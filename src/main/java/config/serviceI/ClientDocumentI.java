@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import config.DAO.ClientDocumentsR;
 import config.DTO.Response;
 import config.Entity.ClientDocuments;
+import config.Service.AzureBlobService;
 import config.Service.ClientDocumentS;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -39,6 +40,8 @@ public class ClientDocumentI implements ClientDocumentS {
 
 	private final ClientDocumentsR clientDocumentsR;
 
+	private final AzureBlobService azureBlobService;
+
 	// Inject server-level configurable paths
 	@Value("${app.client.documents.api-path:./documents/apiDocuments}")
 	private String apiDocumentsPath;
@@ -50,57 +53,25 @@ public class ClientDocumentI implements ClientDocumentS {
 	public Response uploadImage(List<MultipartFile> multipartFiles, String uploadedBy, long userAccountId) {
 		Response response = new Response();
 		try {
-			// Use configurable API documents path
-			String dPath = apiDocumentsPath + File.separator + uploadedBy;
-			File dirFile = new File(dPath);
-
-			// Create directory if it doesn't exist
-			if (!dirFile.exists()) {
-				Files.createDirectories(Paths.get(dPath));
-				logger.info("Created directory: " + dPath);
-			}
-
-			StringBuffer failedFiles = new StringBuffer();
-			int successCount = 0;
 
 			for (MultipartFile file : multipartFiles) {
-				String filename = file.getOriginalFilename();
-				String filePath = dPath + File.separator + filename;
-				File fileToCheck = new File(filePath);
-
-				if (!fileToCheck.exists()) {
-					// Save file metadata to database
-					ClientDocuments clientDoc = new ClientDocuments();
-					clientDoc.setFileName(file.getOriginalFilename());
-					clientDoc.setFileType(file.getContentType());
-					clientDoc.setFileSize(String.valueOf(file.getSize()));
-					clientDoc.setUploadedBy(uploadedBy);
-					clientDoc.setFilePath(dPath);
-					clientDoc.setUserAccountId(userAccountId);
-					clientDoc.setUploadedDate(new Date(System.currentTimeMillis()));
-					clientDocumentsR.save(clientDoc);
-
-					// Save file to disk
-					file.transferTo(Paths.get(filePath));
-					successCount++;
-					logger.info("File uploaded successfully: " + filename);
-				} else {
-					// File already exists
-					failedFiles.append((failedFiles.length() > 0 ? "," : "") + filename);
-				}
+				String fileName = azureBlobService.uploadFile(file, "client");
+				// Save file metadata to database
+				ClientDocuments clientDoc = new ClientDocuments();
+				clientDoc.setFileName(file.getOriginalFilename());
+				clientDoc.setFileType(file.getContentType());
+				clientDoc.setFileSize(String.valueOf(file.getSize()));
+				clientDoc.setUploadedBy(uploadedBy);
+				clientDoc.setFilePath(fileName);
+				clientDoc.setUserAccountId(userAccountId);
+				clientDoc.setUploadedDate(new Date(System.currentTimeMillis()));
+				clientDocumentsR.save(clientDoc);
+				// Save file to disk
+				logger.info("File uploaded successfully: " + fileName);
 			}
 
 			response.setStatus(true);
-			if (successCount > 0) {
-				response.setMessage("Successfully uploaded " + successCount + " file(s)");
-			}
-
-			// Add warning about existing files
-			if (failedFiles.length() > 0) {
-				response.setStatus(true);
-				response.setMessage(failedFiles.toString() + " - these files already exist");
-			}
-
+			response.setMessage("Successfully uploaded");
 			return response;
 
 		} catch (Exception e) {
@@ -118,6 +89,12 @@ public class ClientDocumentI implements ClientDocumentS {
 		List<ClientDocuments> fub = null;
 		try {
 			fub = clientDocumentsR.findAllByUserAccountId(userAccountId);
+			fub = fub.stream().map(d -> {
+				String apiDocumentsPath = azureBlobService.generateReadToken(d.getFilePath());
+				d.setFilePath(apiDocumentsPath);
+				return d;
+
+			}).toList();
 			response.setData(fub);
 			response.setStatus(true);
 			response.setMessage("Success");

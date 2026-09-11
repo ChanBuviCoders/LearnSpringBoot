@@ -19,8 +19,8 @@ import config.DTO.NavigationMenuDTO;
 import config.DTO.Response;
 import config.Entity.UserAccount;
 import config.Entity.UserGroup;
+import config.Service.AzureBlobService;
 import config.Service.CreateClientService;
-import config.Service.StorageService;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -34,7 +34,7 @@ public class CreateClientServiceI implements CreateClientService {
 	@Autowired
 	NavigationR navigationR;
 
-	private final StorageService storageService;
+	private final AzureBlobService storageService;
 
 	@SuppressWarnings("unused")
 	@Override
@@ -45,8 +45,8 @@ public class CreateClientServiceI implements CreateClientService {
 			UserAccount uA = userAccountR.getUserAccountByUserName(userAccount.getUserName());
 			if (uA == null) {
 				if (userAccount != null) {
-					userAccount.setAdharImagePath(storageService.uploadFile(adharFile));
-					userAccount.setPanImagePath(storageService.uploadFile(panFile));
+					userAccount.setAdharImagePath(storageService.uploadFile(adharFile, "ADHAR"));
+					userAccount.setPanImagePath(storageService.uploadFile(panFile, "PAN"));
 					userAccount.setLoginAttempt(0);
 					userAccountR.save(userAccount);
 					response.setStatus(true);
