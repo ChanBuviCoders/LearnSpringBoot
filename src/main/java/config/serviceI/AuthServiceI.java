@@ -1,7 +1,11 @@
 package config.serviceI;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,6 +124,7 @@ public class AuthServiceI implements AuthService {
 				cudb.setAdharImagePath(azureBlobService.generateReadToken(cudb.getAdharImagePath()));
 			}
 			cudb.setPassword(null);
+			cudb.setAuthorities(sessionAuthorities(cudb));
 			response.setStatus(true);
 			response.setMessage("success");
 			response.setData(cudb);
@@ -155,5 +160,18 @@ public class AuthServiceI implements AuthService {
 			response.setMessage("Logout failed");
 		}
 		return response;
+	}
+
+	private List<String> sessionAuthorities(UserAccount account) {
+		Set<String> authorities = new LinkedHashSet<>();
+		if (account.getUserGroupId() != null) {
+			authorities.add("ROLE_USER_" + account.getUserGroupId());
+		}
+		try {
+			authorities.addAll(userAccountR.findFinanceAuthorities(account.getUserAccountId()));
+		} catch (Exception ignored) {
+			// Finance RBAC may not be migrated yet.
+		}
+		return new ArrayList<>(authorities);
 	}
 }

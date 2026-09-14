@@ -1,5 +1,6 @@
 package config.security;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,25 +24,35 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthenticationFilter;
 	private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+	private final String allowedOrigins;
+	private final boolean publicApiDocs;
 
-	@Value("${app.cors.allowed-origins:http://localhost:3000}")
-	private String allowedOrigins;
+	public SecurityConfig(
+			JwtAuthenticationFilter jwtAuthenticationFilter,
+			JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint,
+			@Value("${app.cors.allowed-origins:http://localhost:4200,http://localhost:3000}") String allowedOrigins,
+			@Value("${app.security.public-api-docs:true}") boolean publicApiDocs) {
+		this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+		this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
+		this.allowedOrigins = allowedOrigins;
+		this.publicApiDocs = publicApiDocs;
+	}
 
-	private static final String[] PUBLIC_ENDPOINTS = {
+	private static final String[] AUTH_PUBLIC_ENDPOINTS = {
 			"/api/authSession",
 			"/api/getCapcha",
 			"/api/createUser",
-			"/api/getUsergroupList",
+			"/api/getUsergroupList"
+	};
+
+	private static final String[] API_DOC_ENDPOINTS = {
 			"/swagger-ui/**",
 			"/swagger-ui.html",
 			"/v3/api-docs/**",
@@ -52,6 +63,10 @@ public class SecurityConfig {
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+		List<String> publicEndpoints = new ArrayList<>(Arrays.asList(AUTH_PUBLIC_ENDPOINTS));
+		if (publicApiDocs) {
+			publicEndpoints.addAll(Arrays.asList(API_DOC_ENDPOINTS));
+		}
 		http
 				.csrf(AbstractHttpConfigurer::disable)
 				.cors(Customizer.withDefaults())
@@ -59,7 +74,7 @@ public class SecurityConfig {
 				.exceptionHandling(ex -> ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-						.requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+						.requestMatchers(publicEndpoints.toArray(String[]::new)).permitAll()
 						.anyRequest().authenticated())
 				.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

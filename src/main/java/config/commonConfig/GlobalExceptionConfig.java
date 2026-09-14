@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.server.ResponseStatusException;
 
 import config.DTO.Response;
 
@@ -17,6 +19,21 @@ import config.DTO.Response;
 public class GlobalExceptionConfig {
 
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionConfig.class);
+
+	@ExceptionHandler(ResponseStatusException.class)
+	public ResponseEntity<Response> responseStatusException(ResponseStatusException ex) {
+		return ResponseEntity.status(ex.getStatusCode())
+				.body(ResponseBuilder.error(ex.getReason()));
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<Response> validationException(MethodArgumentNotValidException ex) {
+		String message = ex.getBindingResult().getFieldErrors().stream()
+				.findFirst()
+				.map(error -> error.getField() + ": " + error.getDefaultMessage())
+				.orElse("Request validation failed");
+		return ResponseEntity.badRequest().body(ResponseBuilder.error(message));
+	}
 
 	@ExceptionHandler(ArithmeticException.class)
 	public ResponseEntity<Response> arithmeticException(ArithmeticException ex) {
